@@ -1,23 +1,23 @@
-import { and, asc, eq } from 'drizzle-orm'
-import { comments, users } from '@vidhub/db/schema'
-import { paginationSchema } from '@vidhub/shared'
-import { db } from '@/lib/db'
-import { fail, ok, pageOk } from '@/lib/api'
+﻿import { asc, eq } from "drizzle-orm"
+import { comments, users } from "@vidhub/db/schema"
+import { paginationSchema } from "@vidhub/shared"
+import { db } from "@/lib/db"
+import { fail, pageOk } from "@/lib/api"
 
-type Params = { params: Promise<{ vid: string }> }
+type Params = { params: Promise<{ id: string }> }
 
 export async function GET(req: Request, { params }: Params) {
   try {
-    const { vid: vidRaw } = await params
-    const vid = Number(vidRaw)
-    if (!Number.isFinite(vid)) return fail('无效视频 id')
+    const { id: idRaw } = await params
+    const vid = Number(idRaw)
+    if (!Number.isFinite(vid)) return fail("无效视频 id")
 
     const { searchParams } = new URL(req.url)
     const parsed = paginationSchema.safeParse({
-      currentPage: searchParams.get('currentPage') ?? undefined,
-      pageSize: searchParams.get('pageSize') ?? undefined,
+      currentPage: searchParams.get("currentPage") ?? undefined,
+      pageSize: searchParams.get("pageSize") ?? undefined,
     })
-    if (!parsed.success) return fail('分页参数无效')
+    if (!parsed.success) return fail("分页参数无效")
 
     const rows = await db
       .select({
@@ -65,6 +65,6 @@ export async function GET(req: Request, { params }: Params) {
     return pageOk(parsed.data.currentPage, parsed.data.pageSize, roots)
   } catch (err) {
     console.error(err)
-    return fail('获取评论失败', 500)
+    return fail("获取评论失败", 500)
   }
 }

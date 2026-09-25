@@ -1,10 +1,10 @@
-import { and, eq } from 'drizzle-orm'
-import { archives } from '@vidhub/db/schema'
-import { auth } from '@/auth'
-import { db } from '@/lib/db'
-import { fail, ok } from '@/lib/api'
+﻿import { and, eq } from "drizzle-orm"
+import { archives } from "@vidhub/db/schema"
+import { auth } from "@/auth"
+import { db } from "@/lib/db"
+import { fail, ok } from "@/lib/api"
 
-type Params = { params: Promise<{ vid: string }> }
+type Params = { params: Promise<{ id: string }> }
 
 export async function GET(_req: Request, { params }: Params) {
   const session = await auth()
@@ -13,8 +13,8 @@ export async function GET(_req: Request, { params }: Params) {
   }
 
   try {
-    const vid = Number((await params).vid)
-    if (!Number.isFinite(vid)) return fail('无效视频 id')
+    const vid = Number((await params).id)
+    if (!Number.isFinite(vid)) return fail("无效视频 id")
 
     const [row] = await db
       .select({
@@ -28,6 +28,6 @@ export async function GET(_req: Request, { params }: Params) {
     return ok(row ?? { isLike: false, isCollect: false })
   } catch (err) {
     console.error(err)
-    return fail('获取状态失败', 500)
+    return fail("获取状态失败", 500)
   }
 }
