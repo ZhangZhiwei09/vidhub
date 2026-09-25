@@ -18,8 +18,10 @@ build/
 .env.*.local
 !.env.example
 
-# Uploads & runtime data
-uploads/
+# Uploads & runtime data (keep public placeholder)
+/uploads/
+apps/web/public/uploads/**
+!apps/web/public/uploads/.gitkeep
 data/
 *.log
 npm-debug.log*
