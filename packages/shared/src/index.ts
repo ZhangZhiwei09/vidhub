@@ -41,3 +41,5 @@ export const uploadMergeSchema = z.object({
 })
 
 export type PublishVideoInput = z.infer<typeof publishVideoSchema>
+
+export * from './social'
