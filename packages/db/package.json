@@ -11,16 +11,20 @@
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "studio": "drizzle-kit studio",
+    "seed:admin": "tsx src/seed-admin.ts",
     "typecheck": "tsc --noEmit",
     "lint": "echo \"no lint yet\"",
     "test": "echo \"no tests yet\""
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.41.0",
     "postgres": "^3.4.5"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "drizzle-kit": "^0.30.5",
+    "tsx": "^4.23.15",
     "typescript": "^5.8.2"
   }
 }

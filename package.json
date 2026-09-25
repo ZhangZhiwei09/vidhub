@@ -12,7 +12,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "db:generate": "pnpm --filter @vidhub/db generate",
     "db:migrate": "pnpm --filter @vidhub/db migrate",
-    "db:studio": "pnpm --filter @vidhub/db studio"
+    "db:studio": "pnpm --filter @vidhub/db studio",
+    "db:seed-admin": "pnpm --filter @vidhub/db seed:admin"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
