@@ -8,16 +8,16 @@
 |-------------|--------|------|------|
 | home | `/` | done | 视频列表 |
 | login | `/login` | done | Auth.js |
-| detail | `/video/[id]` | done | |
+| detail | `/video/[id]` | done | 评论/赞藏/弹幕 |
 | popular | `/popular` | done | |
 | result (search) | `/search` | done | |
 | upload | `/upload` | done | 分片上传 |
-| studio/* | `/studio/*` | todo | |
-| channel | `/channel/[uid]` | todo | |
-| message/* | `/message/*` | todo | |
-| live/list | `/live` | todo | 占位页 |
-| live/room | `/live/[id]` | todo | |
-| manager | `/manager` | todo | |
+| studio/* | `/studio/*` | dropped | 首版用关注+消息覆盖核心；可后续补 |
+| channel | `/channel/[uid]` | dropped | 首版用关注按钮替代 |
+| message/* | `/message` `/message/[peerId]` | done | |
+| live/list | `/live` | done | |
+| live/room | `/live/[id]` | done | FLV |
+| manager | — | dropped | 并入投稿/消息 |
 | mobile 独立应用 | — | dropped | 合并为响应式 |
 
 ## 管理端页面
@@ -25,13 +25,13 @@
 | 旧视图 | 新路径 | 状态 |
 |--------|--------|------|
 | login | `/login`（role=admin） | done |
-| dashboard | `/admin` | doing |
-| video | `/admin/videos` | todo |
-| user | `/admin/users` | todo |
-| comment | `/admin/comments` | todo |
-| danmuku | `/admin/danmakus` | todo |
-| inform | `/admin/informs` | todo |
-| auth/check | `/admin/reviews` | todo |
+| dashboard | `/admin` | done |
+| video | `/admin/videos` | done |
+| user | `/admin/users` | done |
+| comment | `/admin/comments` | done |
+| danmuku | `/admin/danmakus` | done |
+| inform | `/admin/informs` | dropped | 首版用 notifications 表预留 |
+| auth/check | `/admin/videos?status=pending` | done | 审核合并进视频管理 |
 
 ## HTTP API（旧 Express）
 
@@ -41,13 +41,13 @@
 | `/admin/login` | 同上 + role | done |
 | video/* | Route Handlers + RSC | done |
 | upload/* | Route Handlers | done |
-| comments/* | Route Handlers | todo |
-| danmaku/* | Route Handlers | todo |
-| archive/like/collect | Route Handlers | todo |
-| users/follow/* | Route Handlers | todo |
-| message/chat/* | Route Handlers | todo |
-| live/* | Route Handlers | todo |
-| admin/* CRUD | `/admin` + APIs | todo |
+| comments/* | Route Handlers | done |
+| danmaku/* | Route Handlers | done |
+| archive/like/collect | Route Handlers | done |
+| users/follow/* | Route Handlers | done |
+| message/chat/* | Route Handlers | done |
+| live/* | Route Handlers | done |
+| admin/* CRUD | `/api/admin` | done |
 
 ## Socket 事件
 
@@ -71,7 +71,7 @@
 | follow | follows | done |
 | live | lives | done |
 | chat | chats | done |
-| user_notifications / admin_notifications | notifications | done（合并） |
+| user_notifications / admin_notifications | notifications | done（合并，API 后续可扩展） |
 
 ## 故意差异
 

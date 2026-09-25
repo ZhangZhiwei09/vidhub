@@ -11,7 +11,15 @@ cp .env.example .env
 pnpm install
 docker compose up -d postgres
 pnpm db:migrate
+pnpm db:seed-admin
 pnpm dev
+```
+
+可选旁路服务：
+
+```sh
+pnpm --filter @vidhub/realtime dev
+pnpm --filter @vidhub/media dev
 ```
 
 ## 结构
