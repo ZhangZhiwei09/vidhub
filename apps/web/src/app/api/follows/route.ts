@@ -33,6 +33,18 @@ export async function POST(req: Request) {
     }
 
     await db.insert(follows).values({ uid, followId: parsed.data.followId })
+    const [me] = await db
+      .select({ username: users.username })
+      .from(users)
+      .where(eq(users.id, uid))
+      .limit(1)
+    const { createNotification } = await import('@/lib/notify')
+    await createNotification({
+      toId: parsed.data.followId,
+      fromId: uid,
+      type: 'follow',
+      content: `${me?.username ?? '有人'} 关注了你`,
+    })
     return ok({ following: true })
   } catch (err) {
     console.error(err)

@@ -117,7 +117,7 @@ export function UploadForm() {
       const publishJson = await publishRes.json()
       if (publishJson.code !== 0) throw new Error(publishJson.message || '发布失败')
 
-      router.push(`/video/${publishJson.data.id}`)
+      router.push('/studio/works')
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : '上传失败')
@@ -175,7 +175,7 @@ export function UploadForm() {
         disabled={pending}
         className="rounded-md bg-zinc-900 px-4 py-2 text-white disabled:opacity-60"
       >
-        {pending ? '上传中…' : '上传并发布'}
+        {pending ? '上传中…' : '上传并提交审核'}
       </button>
     </form>
   )

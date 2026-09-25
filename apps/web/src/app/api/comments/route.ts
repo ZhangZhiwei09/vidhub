@@ -1,9 +1,10 @@
 import { eq } from 'drizzle-orm'
-import { comments, users } from '@vidhub/db/schema'
+import { comments, users, videos } from '@vidhub/db/schema'
 import { commentCreateSchema } from '@vidhub/shared'
 import { auth } from '@/auth'
 import { db } from '@/lib/db'
 import { fail, ok } from '@/lib/api'
+import { createNotification } from '@/lib/notify'
 
 export async function POST(req: Request) {
   const session = await auth()
@@ -49,6 +50,22 @@ export async function POST(req: Request) {
       .innerJoin(users, eq(comments.uid, users.id))
       .where(eq(comments.id, created.id))
       .limit(1)
+
+    const [video] = await db
+      .select({ uid: videos.uid, title: videos.title })
+      .from(videos)
+      .where(eq(videos.id, parsed.data.vid))
+      .limit(1)
+
+    const notifyTo = parsed.data.target ?? video?.uid
+    if (notifyTo) {
+      await createNotification({
+        toId: notifyTo,
+        fromId: uid,
+        type: 'comment',
+        content: `${row?.username ?? '有人'} 评论了「${video?.title ?? '视频'}」: ${parsed.data.content.slice(0, 80)}`,
+      })
+    }
 
     return ok(row)
   } catch (err) {

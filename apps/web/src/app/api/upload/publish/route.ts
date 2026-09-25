@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         uid: Number(session.user.id),
         url: mapped.url,
         partitionId,
-        status: 'approved',
+        status: 'pending',
       })
       .returning({ id: videos.id })
 
