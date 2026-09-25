@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: vidhub-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vidhub
+      POSTGRES_PASSWORD: vidhub
+      POSTGRES_DB: vidhub
+    ports:
+      - "5432:5432"
+    volumes:
+      - vidhub_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vidhub -d vidhub"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  media:
+    build:
+      context: ./apps/media
+    container_name: vidhub-media
+    restart: unless-stopped
+    ports:
+      - "1935:1935"
+      - "8000:8000"
+    volumes:
+      - vidhub_uploads:/app/media
+
+  realtime:
+    build:
+      context: ./apps/realtime
+    container_name: vidhub-realtime
+    restart: unless-stopped
+    environment:
+      PORT: 5000
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - "5000:5000"
+
+volumes:
+  vidhub_pg_data:
+  vidhub_uploads:
