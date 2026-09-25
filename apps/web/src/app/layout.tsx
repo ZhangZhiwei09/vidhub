@@ -32,6 +32,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </Link>
             <nav className="flex items-center gap-4 text-sm text-zinc-700">
               <Link href="/">首页</Link>
+              <Link href="/popular">热门</Link>
+              <Link href="/search">搜索</Link>
               <Link href="/upload">投稿</Link>
               <Link href="/live">直播</Link>
               {session?.user ? (
