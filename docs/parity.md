@@ -12,9 +12,10 @@
 | popular | `/popular` | done | |
 | result (search) | `/search` | done | |
 | upload | `/upload` | done | 分片上传 |
-| studio/* | `/studio/*` | dropped | 首版用关注+消息覆盖核心；可后续补 |
-| channel | `/channel/[uid]` | dropped | 首版用关注按钮替代 |
+| studio/* | `/studio/*` | done | works/collect/following/fans |
+| channel | `/channel/[uid]/*` | done | |
 | message/* | `/message` `/message/[peerId]` | done | |
+| notifications | `/notifications` | done | |
 | live/list | `/live` | done | |
 | live/room | `/live/[id]` | done | FLV |
 | manager | — | dropped | 并入投稿/消息 |
@@ -30,7 +31,7 @@
 | user | `/admin/users` | done |
 | comment | `/admin/comments` | done |
 | danmuku | `/admin/danmakus` | done |
-| inform | `/admin/informs` | dropped | 首版用 notifications 表预留 |
+| inform | `/notifications` | done | 用户通知；管理端 inform 页仍可后续加 |
 | auth/check | `/admin/videos?status=pending` | done | 审核合并进视频管理 |
 
 ## HTTP API（旧 Express）

@@ -39,6 +39,34 @@ services:
     ports:
       - "5000:5000"
 
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: vidhub-web
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      realtime:
+        condition: service_started
+      media:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql://vidhub:vidhub@postgres:5432/vidhub
+      AUTH_SECRET: compose-dev-secret-change-me-32chars
+      AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_REALTIME_URL: http://localhost:5000
+      NEXT_PUBLIC_MEDIA_HTTP_URL: http://localhost:8000
+      NEXT_PUBLIC_RTMP_URL: rtmp://localhost:1935/live
+      UPLOAD_DIR: /app/apps/web/public/uploads
+    ports:
+      - "3000:3000"
+    volumes:
+      - vidhub_web_uploads:/app/apps/web/public/uploads
+
 volumes:
   vidhub_pg_data:
   vidhub_uploads:
+  vidhub_web_uploads:

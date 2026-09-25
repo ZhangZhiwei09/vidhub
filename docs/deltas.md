@@ -7,5 +7,6 @@
 | admin 独立用户表 → `users.role` | 统一鉴权 |
 | MD5 密码 → bcrypt | 安全升级；无历史数据或迁移时重哈希 |
 | 本地 Express JWT Header → Auth.js cookie session | 适配 Next App Router |
-| studio/channel/manager 首版未独立页面 | 核心互动已由关注/消息/投稿覆盖，见 parity dropped |
-| 通知 inform 管理页延后 | notifications 表已建，API 可后续扩展 |
+| 私信在线 map 按 socket.id 误删 → 按 userId 清理 | 修复旧 bug |
+| 投稿默认 `pending`，审核通过后上首页 | 对齐管理审核链路 |
+| manager 独立页未做 | 能力并入投稿/消息/studio |
