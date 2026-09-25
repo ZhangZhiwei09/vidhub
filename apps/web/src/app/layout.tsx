@@ -36,6 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Link href="/search">搜索</Link>
               <Link href="/upload">投稿</Link>
               <Link href="/live">直播</Link>
+              <Link href="/message">消息</Link>
               {session?.user ? (
                 <>
                   <span>{session.user.name}</span>
