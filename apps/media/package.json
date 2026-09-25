@@ -1,0 +1,16 @@
+{
+  "name": "@vidhub/media",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js",
+    "lint": "echo \"no lint yet\"",
+    "typecheck": "echo \"skip\"",
+    "test": "echo \"no tests yet\""
+  },
+  "dependencies": {
+    "node-media-server": "^2.7.0"
+  }
+}
