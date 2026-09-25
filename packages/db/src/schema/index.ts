@@ -43,16 +43,12 @@ export const videos = pgTable('videos', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 })
 
-export const videoMappings = pgTable(
-  'video_mappings',
-  {
-    id: serial('id').primaryKey(),
-    hash: varchar('hash', { length: 64 }).notNull(),
-    url: text('url').notNull(),
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-  },
-  (t) => [uniqueIndex('video_mappings_hash_uidx').on(t.hash)],
-)
+export const videoMappings = pgTable('video_mappings', {
+  id: serial('id').primaryKey(),
+  hash: varchar('hash', { length: 64 }).notNull().unique(),
+  url: text('url').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+})
 
 export const archives = pgTable(
   'archives',

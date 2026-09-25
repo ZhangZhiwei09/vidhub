@@ -6,12 +6,12 @@
 
 | 旧路径/视图 | 新路径 | 状态 | 备注 |
 |-------------|--------|------|------|
-| home | `/` | doing | 骨架 |
+| home | `/` | done | 视频列表 |
 | login | `/login` | done | Auth.js |
-| detail | `/video/[id]` | todo | |
-| popular | `/popular` | todo | |
-| result (search) | `/search` | todo | |
-| upload | `/upload` | todo | 占位页 |
+| detail | `/video/[id]` | done | |
+| popular | `/popular` | done | |
+| result (search) | `/search` | done | |
+| upload | `/upload` | done | 分片上传 |
 | studio/* | `/studio/*` | todo | |
 | channel | `/channel/[uid]` | todo | |
 | message/* | `/message/*` | todo | |
@@ -39,8 +39,8 @@
 |----------|--------|------|
 | `/login` `/register` | Auth.js + server actions | done |
 | `/admin/login` | 同上 + role | done |
-| video/* | Route Handlers | todo |
-| upload/* | Route Handlers | todo |
+| video/* | Route Handlers + RSC | done |
+| upload/* | Route Handlers | done |
 | comments/* | Route Handlers | todo |
 | danmaku/* | Route Handlers | todo |
 | archive/like/collect | Route Handlers | todo |
