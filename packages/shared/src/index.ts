@@ -43,3 +43,12 @@ export const uploadMergeSchema = z.object({
 export type PublishVideoInput = z.infer<typeof publishVideoSchema>
 
 export * from './social'
+export * from './partitions'
+
+export const updateProfileSchema = z.object({
+  username: z.string().min(1).max(32),
+  sign: z.string().max(200).optional().default(''),
+  sex: z.enum(['unknown', 'male', 'female']).default('unknown'),
+})
+
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>

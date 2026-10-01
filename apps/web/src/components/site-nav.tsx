@@ -38,6 +38,7 @@ export function SiteNav({
           <>
             {notifySlot}
             <Link href="/studio/works">空间</Link>
+            <Link href="/settings">设置</Link>
             {isAdmin ? <Link href="/admin">管理</Link> : null}
             <span className="max-w-[8rem] truncate text-zinc-500">{userName}</span>
             <form action={signOutAction}>
@@ -75,6 +76,9 @@ export function SiteNav({
                 </Link>
                 <Link href="/studio/works" onClick={() => setOpen(false)}>
                   空间
+                </Link>
+                <Link href="/settings" onClick={() => setOpen(false)}>
+                  设置
                 </Link>
                 {isAdmin ? (
                   <Link href="/admin" onClick={() => setOpen(false)}>
