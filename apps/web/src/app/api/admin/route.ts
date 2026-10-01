@@ -19,17 +19,19 @@ export async function GET(req: Request) {
     const resource = searchParams.get('resource') || 'dashboard'
 
     if (resource === 'dashboard') {
-      const [[videoTotal], [userTotal], [clickSum], [commentTotal], [danmakuTotal]] =
+      const [[videoTotal], [userTotal], [clickSum], [commentTotal], [danmakuTotal], [pendingTotal]] =
         await Promise.all([
           db.select({ value: count() }).from(videos),
           db.select({ value: count() }).from(users),
           db.select({ value: sql<number>`coalesce(sum(${videos.clicks}), 0)` }).from(videos),
           db.select({ value: count() }).from(comments),
           db.select({ value: count() }).from(danmakus),
+          db.select({ value: count() }).from(videos).where(eq(videos.status, 'pending')),
         ])
 
       return ok([
         { title: '视频数量', total: videoTotal?.value ?? 0 },
+        { title: '待审核', total: pendingTotal?.value ?? 0, href: '/admin/videos?status=pending' },
         { title: '用户数量', total: userTotal?.value ?? 0 },
         { title: '播放量', total: Number(clickSum?.value ?? 0) },
         { title: '评论数', total: commentTotal?.value ?? 0 },

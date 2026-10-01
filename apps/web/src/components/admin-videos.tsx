@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 type VideoRow = {
   id: number
@@ -11,8 +12,10 @@ type VideoRow = {
 }
 
 export function AdminVideos() {
+  const searchParams = useSearchParams()
+  const initialStatus = searchParams.get('status') || ''
   const [list, setList] = useState<VideoRow[]>([])
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState(initialStatus)
 
   async function load(nextStatus = status) {
     const q = nextStatus ? `&status=${nextStatus}` : ''
@@ -22,8 +25,9 @@ export function AdminVideos() {
   }
 
   useEffect(() => {
-    void load()
-  }, [])
+    setStatus(initialStatus)
+    void load(initialStatus)
+  }, [initialStatus])
 
   async function setVideoStatus(id: number, next: 'pending' | 'approved' | 'rejected') {
     await fetch('/api/admin', {

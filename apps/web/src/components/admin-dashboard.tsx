@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-type DashItem = { title: string; total: number }
+type DashItem = { title: string; total: number; href?: string }
 
 export function AdminDashboard() {
   const [items, setItems] = useState<DashItem[]>([])
@@ -34,12 +34,21 @@ export function AdminDashboard() {
         </Link>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
-          <div key={item.title} className="rounded-xl bg-white p-4 ring-1 ring-zinc-200">
-            <p className="text-sm text-zinc-500">{item.title}</p>
-            <p className="mt-2 text-3xl font-semibold">{item.total}</p>
-          </div>
-        ))}
+        {items.map((item) => {
+          const card = (
+            <div className="rounded-xl bg-white p-4 ring-1 ring-zinc-200 transition hover:ring-zinc-400">
+              <p className="text-sm text-zinc-500">{item.title}</p>
+              <p className="mt-2 text-3xl font-semibold">{item.total}</p>
+            </div>
+          )
+          return item.href ? (
+            <Link key={item.title} href={item.href}>
+              {card}
+            </Link>
+          ) : (
+            <div key={item.title}>{card}</div>
+          )
+        })}
       </div>
     </div>
   )
