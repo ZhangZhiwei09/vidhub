@@ -19,7 +19,8 @@ async function getVideos() {
       .where(eq(videos.status, 'approved'))
       .orderBy(desc(videos.createdAt))
       .limit(24)
-  } catch {
+  } catch (err) {
+    console.error('[home] getVideos failed:', err)
     return []
   }
 }
