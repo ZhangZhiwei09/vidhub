@@ -42,6 +42,7 @@ async function main() {
       cover: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
       url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
       clicks: 128,
+      partitionId: 1,
     },
     {
       title: 'Elephant Dream（演示）',
@@ -49,6 +50,7 @@ async function main() {
       cover: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg',
       url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
       clicks: 86,
+      partitionId: 2,
     },
     {
       title: 'Sintel（演示）',
@@ -56,6 +58,7 @@ async function main() {
       cover: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg',
       url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
       clicks: 64,
+      partitionId: 3,
     },
   ]
 
@@ -70,7 +73,7 @@ async function main() {
         uid: demo.id,
         clicks: s.clicks,
         status: 'approved',
-        partitionId: 0,
+        partitionId: s.partitionId,
       })
       .returning()
 

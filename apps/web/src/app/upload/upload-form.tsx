@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { PARTITIONS } from '@vidhub/shared'
 
 const CHUNK_SIZE = 2 * 1024 * 1024
 
@@ -28,6 +29,7 @@ export function UploadForm() {
   const [description, setDescription] = useState('')
   const [videoFile, setVideoFile] = useState<File | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
+  const [partitionId, setPartitionId] = useState(1)
   const [progress, setProgress] = useState('')
   const [error, setError] = useState('')
   const [pending, setPending] = useState(false)
@@ -111,7 +113,7 @@ export function UploadForm() {
           title,
           description,
           cover: coverJson.data.cover,
-          partitionId: 0,
+          partitionId,
         }),
       })
       const publishJson = await publishRes.json()
@@ -147,6 +149,20 @@ export function UploadForm() {
           className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2"
           rows={3}
         />
+      </label>
+      <label className="text-sm text-zinc-600">
+        分区
+        <select
+          value={partitionId}
+          onChange={(e) => setPartitionId(Number(e.target.value))}
+          className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2"
+        >
+          {PARTITIONS.filter((p) => p.id !== 0).map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
       </label>
       <label className="text-sm text-zinc-600">
         视频文件
