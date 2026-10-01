@@ -19,20 +19,22 @@ export function VideoCard({
 }) {
   if (variant === 'rail') {
     return (
-      <Link href={`/video/${video.id}`} className="group block w-[220px] shrink-0">
-        <div className="aspect-video overflow-hidden rounded-[10px] bg-white/10">
+      <Link href={`/video/${video.id}`} className="group block w-[220px] shrink-0 md:w-[240px]">
+        <div className="aspect-video overflow-hidden rounded-[12px] bg-white/10 ring-1 ring-white/10 transition duration-300 group-hover:-translate-y-1 group-hover:ring-white/25 group-hover:shadow-[0_12px_30px_rgba(0,0,0,0.45)]">
           {video.cover ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={video.cover}
               alt={video.title}
-              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+              className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.05]"
             />
           ) : (
             <div className="flex h-full items-center justify-center text-xs text-white/40">无封面</div>
           )}
         </div>
-        <h3 className="mt-2 line-clamp-1 text-[13px] font-semibold text-white">{video.title}</h3>
+        <h3 className="mt-2.5 line-clamp-1 text-[13px] font-semibold text-white transition group-hover:text-white/95">
+          {video.title}
+        </h3>
         <p className="mt-0.5 text-[12px] text-white/45">
           {video.username} · {video.clicks} 播放
         </p>

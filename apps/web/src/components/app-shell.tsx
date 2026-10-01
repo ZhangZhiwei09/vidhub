@@ -40,6 +40,8 @@ export function AppShell({
     return () => window.removeEventListener('scroll', onScroll)
   }, [onAdmin])
 
+  const isHome = pathname === '/'
+
   if (onAdmin) {
     return <>{children}</>
   }
@@ -47,14 +49,19 @@ export function AppShell({
   return (
     <>
       <header
-        className={`sticky top-0 z-40 transition-[background,backdrop-filter,border-color] duration-300 ${
-          scrolled
-            ? 'border-b border-white/[0.06] bg-black/70 backdrop-blur-xl backdrop-saturate-150'
+        className={`sticky top-0 z-40 transition-[background,backdrop-filter,border-color,box-shadow] duration-300 ease-out ${
+          isHome ? '-mb-14' : ''
+        } ${
+          scrolled || !isHome
+            ? 'border-b border-white/[0.06] bg-black/70 shadow-[0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl backdrop-saturate-150'
             : 'border-b border-transparent bg-transparent'
         }`}
       >
         <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-8 px-6 md:px-12">
-          <Link href="/" className="shrink-0 text-[21px] font-bold tracking-tight text-white">
+          <Link
+            href="/"
+            className="shrink-0 text-[21px] font-bold tracking-tight text-white transition hover:opacity-90"
+          >
             VidHub
           </Link>
           <div className="flex min-w-0 flex-1 items-center justify-end gap-3 md:justify-between">

@@ -131,3 +131,61 @@ body.is-admin .vh-input {
 body.is-admin .vh-input::placeholder {
   color: var(--vh-admin-tertiary);
 }
+
+/* Motion */
+@keyframes vh-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes vh-kenburns {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.vh-fade-up {
+  animation: vh-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.vh-fade-up-delay-1 {
+  animation-delay: 0.08s;
+}
+
+.vh-fade-up-delay-2 {
+  animation-delay: 0.16s;
+}
+
+.vh-fade-up-delay-3 {
+  animation-delay: 0.24s;
+}
+
+.vh-hero-media {
+  animation: vh-kenburns 12s ease-out both;
+  will-change: transform;
+}
+
+.vh-rail {
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1.5rem;
+}
+
+.vh-rail > * {
+  scroll-snap-align: start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vh-fade-up,
+  .vh-hero-media {
+    animation: none !important;
+  }
+}
