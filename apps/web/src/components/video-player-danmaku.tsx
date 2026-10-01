@@ -146,51 +146,57 @@ export function VideoPlayerWithDanmaku({
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="发送弹幕"
-          className="min-w-[160px] flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm"
+          className="vh-input min-w-[160px] flex-1 !py-2 text-sm"
         />
         <input
           type="color"
           value={color}
           onChange={(e) => setColor(e.target.value)}
-          className="h-9 w-10 cursor-pointer rounded border border-zinc-300"
+          className="h-9 w-10 cursor-pointer rounded-lg border border-white/20 bg-transparent"
           title="弹幕颜色"
         />
         <button
           type="button"
           onClick={() => void send()}
-          className="rounded-md bg-zinc-900 px-3 py-2 text-sm text-white"
+          className="vh-btn-primary !rounded-xl px-3 py-2 text-sm"
         >
           发送
         </button>
         <button
           type="button"
           onClick={() => setShowPanel((v) => !v)}
-          className="rounded-md border border-zinc-300 px-3 py-2 text-sm"
+          className="vh-btn-ghost !rounded-xl px-3 py-2 text-sm"
         >
           设置
         </button>
       </div>
 
       {showPanel ? (
-        <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl bg-white p-3 text-sm ring-1 ring-zinc-200">
+        <div className="mt-3 flex flex-wrap items-center gap-3 rounded-[14px] border border-white/10 bg-white/[0.04] p-3 text-sm text-white/80 backdrop-blur">
           <label className="flex items-center gap-2">
             <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
             显示弹幕
           </label>
           <div className="flex items-center gap-1">
-            <span className="text-zinc-500">倍速</span>
+            <span className="text-white/45">倍速</span>
             {RATES.map((r) => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setRate(r)}
-                className={`rounded px-2 py-1 ${rate === r ? 'bg-zinc-900 text-white' : 'bg-zinc-100'}`}
+                className={`rounded-lg px-2 py-1 ${
+                  rate === r ? 'bg-white text-black' : 'bg-white/10 text-white/80'
+                }`}
               >
                 {r}x
               </button>
             ))}
           </div>
-          <button type="button" onClick={() => void togglePiP()} className="rounded bg-zinc-100 px-2 py-1">
+          <button
+            type="button"
+            onClick={() => void togglePiP()}
+            className="rounded-lg bg-white/10 px-2 py-1 text-white/80 hover:bg-white/15"
+          >
             画中画
           </button>
         </div>

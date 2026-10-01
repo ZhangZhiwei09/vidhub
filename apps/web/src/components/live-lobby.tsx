@@ -64,68 +64,62 @@ export function LiveLobby() {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-xl bg-white p-4 ring-1 ring-zinc-200">
-        <h2 className="font-semibold">我的开播</h2>
-        <p className="mt-2 text-sm text-zinc-500">
+      <section className="rounded-[14px] border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+        <h2 className="font-semibold text-white">我的开播</h2>
+        <p className="mt-2 text-sm text-white/45">
           使用 OBS 推流到 RTMP，流名为你的用户 id。需先启动 media 服务（端口 1935/8000）。
         </p>
         {mine ? (
-          <div className="mt-3 space-y-2 text-sm">
+          <div className="mt-3 space-y-2 text-sm text-white/80">
             <p>
-              推流地址：<code className="rounded bg-zinc-100 px-1">{mine.publicUrl}</code>
+              推流地址：
+              <code className="rounded-md bg-white/10 px-1.5 py-0.5 text-white/90">{mine.publicUrl}</code>
             </p>
             <p>
-              播放地址：<code className="rounded bg-zinc-100 px-1">{mine.playUrl}</code>
+              播放地址：
+              <code className="rounded-md bg-white/10 px-1.5 py-0.5 text-white/90">{mine.playUrl}</code>
             </p>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full max-w-md rounded-md border border-zinc-300 px-3 py-2"
+              className="vh-input max-w-md"
             />
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => void toggle(1)}
-                className="rounded-md bg-zinc-900 px-3 py-1.5 text-white"
-              >
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={() => void toggle(1)} className="vh-btn-primary !rounded-xl px-3 py-1.5">
                 开播
               </button>
-              <button
-                type="button"
-                onClick={() => void toggle(0)}
-                className="rounded-md border border-zinc-300 px-3 py-1.5"
-              >
+              <button type="button" onClick={() => void toggle(0)} className="vh-btn-ghost !rounded-xl px-3 py-1.5">
                 关播
               </button>
               {mine.status === 1 ? (
-                <Link href={`/live/${mine.id}`} className="rounded-md bg-emerald-700 px-3 py-1.5 text-white">
+                <Link href={`/live/${mine.id}`} className="rounded-xl bg-emerald-600 px-3 py-1.5 text-white">
                   进入直播间
                 </Link>
               ) : null}
             </div>
           </div>
         ) : null}
-        {msg ? <p className="mt-2 text-sm text-red-600">{msg}</p> : null}
+        {msg ? <p className="mt-2 text-sm text-red-400">{msg}</p> : null}
       </section>
 
       <section>
-        <h2 className="mb-3 font-semibold">正在直播</h2>
+        <h2 className="mb-3 font-semibold text-white">正在直播</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((room) => (
             <Link
               key={room.id}
               href={`/live/${room.id}`}
-              className="overflow-hidden rounded-xl bg-white ring-1 ring-zinc-200"
+              className="overflow-hidden rounded-[14px] border border-white/10 bg-white/[0.04] transition hover:bg-white/[0.07]"
             >
-              <div className="aspect-video bg-zinc-200">
+              <div className="aspect-video bg-white/10">
                 {room.cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={room.cover} alt="" className="h-full w-full object-cover" />
                 ) : null}
               </div>
               <div className="p-3">
-                <p className="font-medium">{room.title || '未命名直播'}</p>
-                <p className="text-xs text-zinc-500">{room.username}</p>
+                <p className="font-medium text-white">{room.title || '未命名直播'}</p>
+                <p className="text-xs text-white/45">{room.username}</p>
               </div>
             </Link>
           ))}

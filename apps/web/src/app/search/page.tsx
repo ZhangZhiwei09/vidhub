@@ -37,22 +37,23 @@ export default async function SearchPage({ searchParams }: Props) {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
+    <main className="vh-page">
+      <h1 className="vh-page-title text-white">搜索</h1>
       <form className="mb-6 flex gap-2">
         <input
           name="q"
           defaultValue={keywords}
           placeholder="搜索标题"
-          className="flex-1 rounded-md border border-zinc-300 px-3 py-2"
+          className="vh-input flex-1"
         />
-        <button type="submit" className="rounded-md bg-zinc-900 px-4 py-2 text-white">
+        <button type="submit" className="vh-btn-primary !rounded-xl px-4">
           搜索
         </button>
       </form>
       {!keywords ? (
-        <p className="text-zinc-500">输入关键词开始搜索</p>
+        <p className="text-white/45">输入关键词开始搜索</p>
       ) : list.length === 0 ? (
-        <p className="text-zinc-500">没有匹配结果</p>
+        <p className="text-white/45">没有匹配结果</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((v) => (

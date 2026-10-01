@@ -55,26 +55,26 @@ export default async function VideoDetailPage({ params }: Props) {
           src={row.url}
           poster={row.cover || undefined}
         />
-        <h1 className="mt-4 text-2xl font-semibold text-zinc-900">{row.title}</h1>
-        <p className="mt-2 text-sm text-zinc-500">
+        <h1 className="mt-4 text-2xl font-semibold tracking-tight text-white">{row.title}</h1>
+        <p className="mt-2 text-sm text-white/45">
           {row.username} · {(row.clicks ?? 0) + 1} 播放 ·{' '}
           {row.createdAt instanceof Date ? row.createdAt.toLocaleString() : String(row.createdAt)}
         </p>
         <ArchiveActions vid={row.id} />
-        <p className="mt-4 whitespace-pre-wrap text-zinc-700">{row.description}</p>
+        <p className="mt-4 whitespace-pre-wrap text-white/75">{row.description}</p>
         <CommentSection vid={row.id} />
       </section>
-      <aside className="h-fit rounded-xl bg-white p-4 ring-1 ring-zinc-200">
+      <aside className="h-fit rounded-[14px] border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={row.avatar || '/next.svg'}
             alt=""
-            className="h-12 w-12 rounded-full bg-zinc-100 object-cover"
+            className="h-12 w-12 rounded-full bg-white/10 object-cover"
           />
           <div>
-            <p className="font-medium text-zinc-900">{row.username}</p>
-            <p className="text-sm text-zinc-500">{row.sign || '这个人很懒，什么都没写'}</p>
+            <p className="font-medium text-white">{row.username}</p>
+            <p className="text-sm text-white/45">{row.sign || '这个人很懒，什么都没写'}</p>
           </div>
         </div>
         <div className="mt-4">

@@ -25,7 +25,7 @@ export default async function LiveRoomPage({ params }: Props) {
   if (!row) notFound()
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
+    <main className="vh-page max-w-5xl">
       <LivePlayer playUrl={row.playUrl} title={`${row.title} · ${row.username}`} />
     </main>
   )

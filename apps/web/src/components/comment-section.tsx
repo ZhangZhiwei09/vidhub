@@ -52,46 +52,50 @@ export function CommentSection({ vid }: { vid: number }) {
 
   return (
     <section className="mt-8 space-y-4">
-      <h2 className="text-lg font-semibold">评论</h2>
+      <h2 className="text-lg font-semibold tracking-tight text-white">评论</h2>
       <div className="flex gap-2">
         <input
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="说点什么…"
-          className="flex-1 rounded-md border border-zinc-300 px-3 py-2"
+          className="vh-input flex-1"
         />
         <button
           type="button"
           disabled={pending}
           onClick={() => void submit()}
-          className="rounded-md bg-zinc-900 px-4 py-2 text-white disabled:opacity-60"
+          className="vh-btn-primary !rounded-xl px-4 disabled:opacity-60"
         >
           发送
         </button>
       </div>
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
-      <ul className="space-y-4">
+      {error ? <p className="text-sm text-red-400">{error}</p> : null}
+      <ul className="space-y-3">
         {list.map((c) => (
-          <li key={c.id} className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
+          <li
+            key={c.id}
+            className="rounded-[14px] border border-white/10 bg-white/[0.04] p-3 backdrop-blur"
+          >
             <div className="flex items-start gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={c.avatar || '/next.svg'}
                 alt=""
-                className="h-9 w-9 rounded-full bg-zinc-100 object-cover"
+                className="h-9 w-9 rounded-full bg-white/10 object-cover"
               />
               <div>
-                <p className="text-sm font-medium">{c.username}</p>
-                <p className="mt-1 text-sm text-zinc-700">{c.content}</p>
+                <p className="text-sm font-medium text-white">{c.username}</p>
+                <p className="mt-1 text-sm text-white/70">{c.content}</p>
                 {(c.children?.length ?? 0) > 0 ? (
-                  <ul className="mt-3 space-y-2 border-l border-zinc-200 pl-3">
+                  <ul className="mt-3 space-y-2 border-l border-white/10 pl-3">
                     {c.children!.map((child) => (
-                      <li key={child.id} className="text-sm">
-                        <span className="font-medium">{child.username}</span>：{child.content}
+                      <li key={child.id} className="text-sm text-white/70">
+                        <span className="font-medium text-white">{child.username}</span>：
+                        {child.content}
                       </li>
                     ))}
                     {(c.childrenCount ?? 0) > (c.children?.length ?? 0) ? (
-                      <li className="text-xs text-zinc-500">还有更多回复…</li>
+                      <li className="text-xs text-white/40">还有更多回复…</li>
                     ) : null}
                   </ul>
                 ) : null}

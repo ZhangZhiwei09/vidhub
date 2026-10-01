@@ -16,12 +16,16 @@ export function ProfileTabs({
   active: string
 }) {
   return (
-    <nav className="mb-6 flex gap-2 border-b border-zinc-200 pb-2 text-sm">
+    <nav className="mb-6 flex flex-wrap gap-2 border-b border-white/10 pb-3 text-sm">
       {tabs.map((t) => (
         <Link
           key={t.href}
           href={`${basePath}/${t.href}`}
-          className={`rounded-md px-3 py-1.5 ${active === t.href ? 'bg-zinc-900 text-white' : 'text-zinc-600 hover:bg-zinc-100'}`}
+          className={`rounded-full px-3.5 py-1.5 font-medium transition ${
+            active === t.href
+              ? 'bg-white text-black'
+              : 'text-white/55 hover:bg-white/10 hover:text-white'
+          }`}
         >
           {t.label}
         </Link>
@@ -44,18 +48,18 @@ export function ProfileHeader({
   actions?: ReactNode
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-white p-5 ring-1 ring-zinc-200">
+    <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-[14px] border border-white/10 bg-white/[0.04] p-5 backdrop-blur">
       <div className="flex items-center gap-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={user.avatar || '/next.svg'}
           alt=""
-          className="h-16 w-16 rounded-full bg-zinc-100 object-cover"
+          className="h-16 w-16 rounded-full bg-white/10 object-cover"
         />
         <div>
-          <h1 className="text-xl font-semibold">{user.username}</h1>
-          <p className="mt-1 text-sm text-zinc-500">{user.sign || '这个人很懒，什么都没写'}</p>
-          <p className="mt-2 text-xs text-zinc-500">
+          <h1 className="text-xl font-semibold tracking-tight text-white">{user.username}</h1>
+          <p className="mt-1 text-sm text-white/45">{user.sign || '这个人很懒，什么都没写'}</p>
+          <p className="mt-2 text-xs text-white/40">
             关注 {user.followingCount} · 粉丝 {user.fansCount}
           </p>
         </div>

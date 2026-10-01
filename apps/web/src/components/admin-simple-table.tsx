@@ -35,34 +35,34 @@ export function AdminSimpleTable({
   }
 
   return (
-    <div className="space-y-4">
-      <Link href="/admin" className="text-sm text-zinc-500">
-        ← 仪表盘
-      </Link>
-      <table className="w-full overflow-hidden rounded-xl bg-white text-left text-sm ring-1 ring-zinc-200">
-        <thead className="bg-zinc-50 text-zinc-500">
-          <tr>
+    <div className="overflow-hidden rounded-[14px] border border-[var(--vh-admin-hairline)] bg-white shadow-[var(--vh-shadow-card)]">
+      <table className="w-full text-left text-[13px]">
+        <thead>
+          <tr className="border-b border-[var(--vh-admin-hairline)] bg-black/[0.015] text-[11px] font-semibold uppercase tracking-[0.03em] text-[var(--vh-admin-tertiary)]">
             {columns.map((c) => (
-              <th key={c.key} className="px-3 py-2">
+              <th key={c.key} className="px-5 py-2.5">
                 {c.label}
               </th>
             ))}
-            {deleteAction ? <th className="px-3 py-2">操作</th> : null}
+            {deleteAction ? <th className="px-5 py-2.5">操作</th> : null}
           </tr>
         </thead>
         <tbody>
           {list.map((row) => (
-            <tr key={String(row.id)} className="border-t border-zinc-100">
+            <tr
+              key={String(row.id)}
+              className="border-b border-[var(--vh-admin-hairline)] last:border-0 hover:bg-[rgba(0,113,227,0.04)]"
+            >
               {columns.map((c) => (
-                <td key={c.key} className="max-w-xs truncate px-3 py-2">
+                <td key={c.key} className="max-w-xs truncate px-5 py-3">
                   {String(row[c.key] ?? '')}
                 </td>
               ))}
               {deleteAction ? (
-                <td className="px-3 py-2">
+                <td className="px-5 py-3">
                   <button
                     type="button"
-                    className="text-red-600"
+                    className="font-medium text-red-600 hover:opacity-80"
                     onClick={() => void remove(Number(row.id))}
                   >
                     删除
@@ -71,8 +71,23 @@ export function AdminSimpleTable({
               ) : null}
             </tr>
           ))}
+          {list.length === 0 ? (
+            <tr>
+              <td
+                colSpan={columns.length + (deleteAction ? 1 : 0)}
+                className="px-5 py-10 text-center text-[var(--vh-admin-tertiary)]"
+              >
+                暂无数据
+              </td>
+            </tr>
+          ) : null}
         </tbody>
       </table>
+      <div className="border-t border-[var(--vh-admin-hairline)] px-5 py-3">
+        <Link href="/admin" className="text-[13px] font-medium text-[var(--vh-accent)]">
+          ← 返回仪表盘
+        </Link>
+      </div>
     </div>
   )
 }

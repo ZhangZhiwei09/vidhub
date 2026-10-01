@@ -28,7 +28,7 @@ export default async function StudioCollectPage() {
   return (
     <StudioShell tab="collect">
       {list.length === 0 ? (
-        <p className="text-sm text-zinc-500">暂无收藏</p>
+        <p className="text-sm text-white/45">暂无收藏</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((v) => (

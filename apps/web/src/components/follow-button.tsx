@@ -30,7 +30,11 @@ export function FollowButton({ followId }: { followId: number }) {
       type="button"
       disabled={pending}
       onClick={() => void toggle()}
-      className="rounded-md bg-zinc-900 px-3 py-2 text-sm text-white disabled:opacity-60"
+      className={`w-full rounded-full px-3 py-2 text-sm font-semibold transition disabled:opacity-60 ${
+        following
+          ? 'border border-white/25 text-white/80 hover:border-white/45'
+          : 'bg-[var(--vh-accent)] text-white hover:bg-[var(--vh-accent-hover)]'
+      }`}
     >
       {following ? '取消关注' : '关注'}
     </button>

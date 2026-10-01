@@ -12,8 +12,8 @@ export default async function MessagePeerPage({ params }: Props) {
   if (!Number.isFinite(id)) redirect('/message')
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="mb-4 text-2xl font-semibold">消息</h1>
+    <main className="vh-page">
+      <h1 className="vh-page-title text-white">消息</h1>
       <MessageClient selfId={Number(session.user.id)} peerId={id} />
     </main>
   )

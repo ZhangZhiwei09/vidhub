@@ -37,13 +37,13 @@ export async function StudioShell({
   if (!profile) redirect('/login')
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
+    <main className="vh-page">
       <ProfileHeader
         user={profile}
         actions={
           <Link
             href={`/channel/${uid}`}
-            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm"
+            className="rounded-full border border-white/20 px-3 py-1.5 text-sm text-white/80 hover:border-white/40 hover:text-white"
           >
             公开主页
           </Link>

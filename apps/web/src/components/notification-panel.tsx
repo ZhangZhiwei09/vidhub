@@ -40,24 +40,34 @@ export function NotificationPanel() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8">
+    <main className="vh-page max-w-3xl">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">通知 {unread > 0 ? `(${unread})` : ''}</h1>
-        <button type="button" onClick={() => void readAll()} className="text-sm text-zinc-600">
+        <h1 className="text-2xl font-semibold tracking-tight text-white">
+          通知 {unread > 0 ? `(${unread})` : ''}
+        </h1>
+        <button
+          type="button"
+          onClick={() => void readAll()}
+          className="text-sm text-white/55 hover:text-white"
+        >
           全部已读
         </button>
       </div>
       <ul className="space-y-2">
         {list.length === 0 ? (
-          <li className="text-sm text-zinc-500">暂无通知</li>
+          <li className="text-sm text-white/45">暂无通知</li>
         ) : (
           list.map((n) => (
             <li
               key={n.id}
-              className={`rounded-xl px-4 py-3 ring-1 ring-zinc-200 ${n.readStatus ? 'bg-white' : 'bg-amber-50'}`}
+              className={`rounded-[14px] border px-4 py-3 ${
+                n.readStatus
+                  ? 'border-white/10 bg-white/[0.04]'
+                  : 'border-[rgba(0,113,227,0.35)] bg-[rgba(0,113,227,0.12)]'
+              }`}
             >
-              <p className="text-sm text-zinc-800">{n.content}</p>
-              <p className="mt-1 text-xs text-zinc-500">
+              <p className="text-sm text-white/85">{n.content}</p>
+              <p className="mt-1 text-xs text-white/40">
                 {n.type} · {new Date(n.createdAt).toLocaleString()}
               </p>
             </li>
@@ -65,7 +75,7 @@ export function NotificationPanel() {
         )}
       </ul>
       <p className="mt-6 text-sm">
-        <Link href="/message" className="text-zinc-600 underline">
+        <Link href="/message" className="text-[var(--vh-accent)] hover:underline">
           去私信
         </Link>
       </p>

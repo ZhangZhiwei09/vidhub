@@ -9,7 +9,7 @@ export default async function UploadPage() {
   }
 
   return (
-    <main className="px-4 py-10">
+    <main className="vh-page">
       <UploadForm />
     </main>
   )

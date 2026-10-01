@@ -28,13 +28,13 @@ export default async function StudioWorksPage() {
   return (
     <StudioShell tab="works">
       {list.length === 0 ? (
-        <p className="text-sm text-zinc-500">还没有作品，去投稿吧。</p>
+        <p className="text-sm text-white/45">还没有作品，去投稿吧。</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((v) => (
             <div key={v.id} className="space-y-1">
               <VideoCard video={v} />
-              <p className="text-xs text-zinc-500">状态：{v.status}</p>
+              <p className="text-xs text-white/40">状态：{v.status}</p>
             </div>
           ))}
         </div>

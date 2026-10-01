@@ -50,8 +50,8 @@ export function AdminVideos() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <Link href="/admin" className="text-sm text-zinc-500">
+      <div className="flex flex-wrap items-center gap-3">
+        <Link href="/admin" className="text-[13px] font-medium text-[var(--vh-accent)]">
           ← 仪表盘
         </Link>
         <select
@@ -60,7 +60,7 @@ export function AdminVideos() {
             setStatus(e.target.value)
             void load(e.target.value)
           }}
-          className="rounded-md border border-zinc-300 px-2 py-1 text-sm"
+          className="rounded-lg border border-[var(--vh-admin-hairline-strong)] bg-white px-2.5 py-1.5 text-[13px]"
         >
           <option value="">全部</option>
           <option value="pending">待审</option>
@@ -68,38 +68,67 @@ export function AdminVideos() {
           <option value="rejected">已拒绝</option>
         </select>
       </div>
-      <table className="w-full overflow-hidden rounded-xl bg-white text-left text-sm ring-1 ring-zinc-200">
-        <thead className="bg-zinc-50 text-zinc-500">
-          <tr>
-            <th className="px-3 py-2">ID</th>
-            <th className="px-3 py-2">标题</th>
-            <th className="px-3 py-2">状态</th>
-            <th className="px-3 py-2">播放</th>
-            <th className="px-3 py-2">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          {list.map((v) => (
-            <tr key={v.id} className="border-t border-zinc-100">
-              <td className="px-3 py-2">{v.id}</td>
-              <td className="px-3 py-2">{v.title}</td>
-              <td className="px-3 py-2">{v.status}</td>
-              <td className="px-3 py-2">{v.clicks}</td>
-              <td className="space-x-2 px-3 py-2">
-                <button type="button" onClick={() => void setVideoStatus(v.id, 'approved')}>
-                  通过
-                </button>
-                <button type="button" onClick={() => void setVideoStatus(v.id, 'rejected')}>
-                  拒绝
-                </button>
-                <button type="button" className="text-red-600" onClick={() => void remove(v.id)}>
-                  删除
-                </button>
-              </td>
+      <div className="overflow-hidden rounded-[14px] border border-[var(--vh-admin-hairline)] bg-white shadow-[var(--vh-shadow-card)]">
+        <table className="w-full text-left text-[13px]">
+          <thead>
+            <tr className="border-b border-[var(--vh-admin-hairline)] bg-black/[0.015] text-[11px] font-semibold uppercase tracking-[0.03em] text-[var(--vh-admin-tertiary)]">
+              <th className="px-5 py-2.5">ID</th>
+              <th className="px-5 py-2.5">标题</th>
+              <th className="px-5 py-2.5">状态</th>
+              <th className="px-5 py-2.5">播放</th>
+              <th className="px-5 py-2.5">操作</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {list.map((v) => (
+              <tr
+                key={v.id}
+                className="border-b border-[var(--vh-admin-hairline)] last:border-0 hover:bg-[rgba(0,113,227,0.04)]"
+              >
+                <td className="px-5 py-3 tabular-nums">{v.id}</td>
+                <td className="px-5 py-3 font-medium">{v.title}</td>
+                <td className="px-5 py-3">
+                  <span
+                    className={`inline-flex h-[22px] items-center rounded-md px-2 text-[11px] font-semibold ${
+                      v.status === 'approved'
+                        ? 'bg-[rgba(52,199,89,0.12)] text-[#248A3D]'
+                        : v.status === 'pending'
+                          ? 'bg-[rgba(255,149,0,0.12)] text-[#C93400]'
+                          : 'bg-black/[0.06] text-[var(--vh-admin-secondary)]'
+                    }`}
+                  >
+                    {v.status}
+                  </span>
+                </td>
+                <td className="px-5 py-3 tabular-nums">{v.clicks}</td>
+                <td className="space-x-3 px-5 py-3">
+                  <button
+                    type="button"
+                    className="font-medium text-[var(--vh-accent)]"
+                    onClick={() => void setVideoStatus(v.id, 'approved')}
+                  >
+                    通过
+                  </button>
+                  <button
+                    type="button"
+                    className="font-medium text-[var(--vh-admin-secondary)]"
+                    onClick={() => void setVideoStatus(v.id, 'rejected')}
+                  >
+                    拒绝
+                  </button>
+                  <button
+                    type="button"
+                    className="font-medium text-red-600"
+                    onClick={() => void remove(v.id)}
+                  >
+                    删除
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

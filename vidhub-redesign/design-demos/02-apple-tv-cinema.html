@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VidHub · Apple TV Cinema</title>
+<!--
+  ═══════════════════════════════════════════════════════════════════
+  逻辑二 · 现实参照｜Apple TV（原 Apple TV+）2025–26 流媒体视觉语言
+  ═══════════════════════════════════════════════════════════════════
+
+  【参照案例拆解】
+  · 配色：纯黑画布 #000；正文/标题纯白；主 CTA 白底黑字；
+          Apple Blue #0071E3 仅用于登录/账号类动作（非内容 CTA）
+  · 字体：-apple-system / SF Pro Display 系；大标题字距约 -0.02em；
+          字重层级靠 Display 粗细与字号拉开，少用装饰线
+  · 布局：全幅 Hero 海报 Billboard 叠顶栏 → 其下横向滚动分类轨（Rail）；
+          内容海报即设计，封面主导视觉，UI 几乎消失
+  · 标志元素：顶栏 Liquid Glass（半透明黑 + backdrop-filter blur）；
+          海报卡圆角克制；rail 标题左对齐小字；滚动后顶栏加深磨砂
+
+  【Form 来源】
+  · 叙事：电影感海报墙——浏览像走进影院大厅，封面即广告牌
+  · 距离：1m 笔记本主视距；大标题可读、轨内海报可扫
+  · 温度：冷静暗房 + 内容发光矩形成为唯一兴奋点
+  · 容量：首屏仅品牌/宣言/双 CTA；下方 2+ 条 rail，每轨多海报
+  · 母题：发光矩形屏幕被干净裱框托住——海报是发光体，UI 是裱框
+-->
+<style>
+  :root {
+    --bg: #000000;
+    --fg: #ffffff;
+    --fg-muted: rgba(255, 255, 255, 0.62);
+    --fg-dim: rgba(255, 255, 255, 0.38);
+    --apple-blue: #0071E3;
+    --apple-blue-hover: #0070E0;
+    --glass: rgba(0, 0, 0, 0.35);
+    --glass-scrolled: rgba(0, 0, 0, 0.72);
+    --rail-gap: 14px;
+    --card-w: 220px;
+    --card-h: 124px;
+    --radius: 10px;
+    --nav-h: 56px;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-width: 1440px;
+    background: var(--bg);
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* ── Top bar · Liquid Glass ── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    margin-bottom: calc(-1 * var(--nav-h));
+    background: transparent;
+    transition: background 0.35s ease, backdrop-filter 0.35s ease, -webkit-backdrop-filter 0.35s ease;
+  }
+
+  .topbar.is-scrolled {
+    background: var(--glass-scrolled);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    backdrop-filter: saturate(180%) blur(24px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+  }
+
+  .brand {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg-muted);
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.is-active {
+    color: var(--fg);
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mode-switch {
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    border-radius: 980px;
+    background: rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .mode-switch button {
+    font-size: 12px;
+    font-weight: 560;
+    padding: 6px 14px;
+    border-radius: 980px;
+    color: var(--fg-muted);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .mode-switch button.is-active {
+    background: rgba(255, 255, 255, 0.92);
+    color: #000;
+  }
+
+  .btn-login {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 18px;
+    border-radius: 980px;
+    background: var(--apple-blue);
+    color: #fff;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .btn-login:hover {
+    background: var(--apple-blue-hover);
+  }
+
+  /* ── Views ── */
+  .view { display: none; }
+  .view.is-active { display: block; }
+
+  /* ── Hero Billboard ── */
+  .hero {
+    position: relative;
+    height: 78vh;
+    min-height: 620px;
+    max-height: 820px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+  }
+
+  .hero-shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, #000 0%, transparent 42%),
+      linear-gradient(to right, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.25) 42%, transparent 68%),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, transparent 28%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 72px;
+    max-width: 640px;
+  }
+
+  .hero-kicker {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    margin-bottom: 14px;
+  }
+
+  .hero-title {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 14px;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.45;
+    color: var(--fg-muted);
+    max-width: 420px;
+    margin-bottom: 28px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-primary {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 26px;
+    border-radius: 980px;
+    background: #fff;
+    color: #000;
+    transition: transform 0.15s, opacity 0.2s;
+  }
+
+  .btn-primary:hover { opacity: 0.92; transform: scale(1.02); }
+
+  .btn-ghost {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 11px 24px;
+    border-radius: 980px;
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  }
+
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.02);
+  }
+
+  /* ── Rails ── */
+  .rails {
+    padding: 8px 0 80px;
+    margin-top: -36px;
+    position: relative;
+    z-index: 3;
+  }
+
+  .rail {
+    margin-bottom: 36px;
+  }
+
+  .rail-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 48px 14px;
+  }
+
+  .rail-title {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .rail-more {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg-dim);
+    transition: color 0.2s;
+  }
+
+  .rail-more:hover { color: var(--fg-muted); }
+
+  .rail-track {
+    display: flex;
+    gap: var(--rail-gap);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 6px 48px 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .rail-track::-webkit-scrollbar { display: none; }
+
+  .poster {
+    flex: 0 0 var(--card-w);
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .poster:hover {
+    transform: translateY(-6px);
+  }
+
+  .poster-cover {
+    width: var(--card-w);
+    height: var(--card-h);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #111;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    transition: box-shadow 0.25s;
+  }
+
+  .poster:hover .poster-cover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+  }
+
+  .poster-meta {
+    padding: 10px 2px 0;
+  }
+
+  .poster-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .poster-sub {
+    font-size: 11px;
+    color: var(--fg-dim);
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 分区 pill · 极克制 */
+  .partition-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 48px 28px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .partition-row::-webkit-scrollbar { display: none; }
+
+  .pill {
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 980px;
+    color: var(--fg-muted);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .pill:hover { color: var(--fg); background: rgba(255, 255, 255, 0.1); }
+
+  .pill.is-active {
+    color: #000;
+    background: #fff;
+    border-color: #fff;
+  }
+
+  /* ── Admin · 海报感数字台 ── */
+  .admin {
+    padding: calc(var(--nav-h) + 48px) 48px 80px;
+    min-height: 100vh;
+  }
+
+  .admin-hero {
+    margin-bottom: 40px;
+  }
+
+  .admin-kicker {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-bottom: 10px;
+  }
+
+  .admin-title {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .admin-sub {
+    margin-top: 10px;
+    font-size: 15px;
+    color: var(--fg-muted);
+  }
+
+  .stat-rail {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .stat-card {
+    flex: 1;
+    padding: 28px 28px 24px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: saturate(160%) blur(20px);
+    backdrop-filter: saturate(160%) blur(20px);
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+
+  .stat-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.14);
+    transform: translateY(-3px);
+  }
+
+  .stat-num {
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg-muted);
+  }
+
+  .admin-panel {
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+  }
+
+  .admin-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .admin-tabs button {
+    font-size: 13px;
+    font-weight: 560;
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: var(--fg-muted);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .admin-tabs button.is-active {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--fg);
+  }
+
+  .queue {
+    padding: 8px 0;
+  }
+
+  .queue-row {
+    display: grid;
+    grid-template-columns: 88px 1fr auto auto;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.15s;
+  }
+
+  .queue-row:last-child { border-bottom: none; }
+  .queue-row:hover { background: rgba(255, 255, 255, 0.03); }
+
+  .queue-thumb {
+    width: 88px;
+    height: 50px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .queue-info h4 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .queue-info p {
+    font-size: 12px;
+    color: var(--fg-dim);
+    margin-top: 3px;
+  }
+
+  .queue-status {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fg-muted);
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .queue-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .queue-actions button {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 980px;
+    transition: opacity 0.15s, background 0.15s;
+  }
+
+  .btn-approve {
+    background: #fff;
+    color: #000;
+  }
+
+  .btn-approve:hover { opacity: 0.9; }
+
+  .btn-reject {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: var(--fg-muted);
+  }
+
+  .btn-reject:hover {
+    border-color: rgba(255, 255, 255, 0.55);
+    color: var(--fg);
+  }
+
+  .admin-footer-note {
+    margin-top: 28px;
+    font-size: 12px;
+    color: var(--fg-dim);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ Topbar ═══ -->
+<header class="topbar" id="topbar">
+  <div class="topbar-left">
+    <a href="#" class="brand" id="brandHome">VidHub</a>
+    <nav class="nav-links" id="browseNav">
+      <a href="#" class="is-active" data-nav="home">首页</a>
+      <a href="#" data-nav="hot">热门</a>
+      <a href="#" data-nav="search">搜索</a>
+      <a href="#" data-nav="upload">投稿</a>
+      <a href="#" data-nav="live">直播</a>
+      <a href="#" data-nav="msg">消息</a>
+    </nav>
+  </div>
+  <div class="topbar-right">
+    <div class="mode-switch" role="tablist" aria-label="视图切换">
+      <button type="button" class="is-active" data-mode="browse" role="tab" aria-selected="true">浏览</button>
+      <button type="button" data-mode="admin" role="tab" aria-selected="false">管理</button>
+    </div>
+    <button type="button" class="btn-login">登录</button>
+  </div>
+</header>
+
+<!-- ═══ Browse ═══ -->
+<main class="view is-active" id="viewBrowse">
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="../assets/img/cover1.jpg" alt="" />
+    </div>
+    <div class="hero-shade"></div>
+    <div class="hero-content">
+      <p class="hero-kicker">Featured</p>
+      <h1 class="hero-title">发现精彩视频</h1>
+      <p class="hero-sub">列表、详情与分片投稿已接入。登录后即可上传。</p>
+      <div class="hero-ctas">
+        <button type="button" class="btn-primary">去投稿</button>
+        <button type="button" class="btn-ghost">热门</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="rails">
+    <div class="partition-row" id="partitions">
+      <button type="button" class="pill is-active">全部</button>
+      <button type="button" class="pill">动画</button>
+      <button type="button" class="pill">音乐</button>
+      <button type="button" class="pill">游戏</button>
+      <button type="button" class="pill">科技</button>
+      <button type="button" class="pill">生活</button>
+      <button type="button" class="pill">娱乐</button>
+    </div>
+
+    <!-- Rail 1 · 精选 -->
+    <section class="rail">
+      <div class="rail-head">
+        <h2 class="rail-title">精选</h2>
+        <a href="#" class="rail-more">查看全部</a>
+      </div>
+      <div class="rail-track">
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover1.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">夜色里的城市航拍</h3>
+            <p class="poster-sub">青椒工作室 · 12.4 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover2.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">胶片感短剧幕后</h3>
+            <p class="poster-sub">FrameLab · 8.1 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover3.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">户外舞台日落彩排</h3>
+            <p class="poster-sub">现场收音 · 5.6 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover4.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">调色台前的一小时</h3>
+            <p class="poster-sub">剪辑笔记 · 3.2 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover5.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">深海纪录片选段</h3>
+            <p class="poster-sub">自然镜头 · 21 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover6.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">暗黑奇幻片场实录</h3>
+            <p class="poster-sub">CinemaTalk · 9.8 万播放</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Rail 2 · 动画 -->
+    <section class="rail">
+      <div class="rail-head">
+        <h2 class="rail-title">动画</h2>
+        <a href="#" class="rail-more">查看全部</a>
+      </div>
+      <div class="rail-track">
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover7.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">手绘分镜练习 03</h3>
+            <p class="poster-sub">墨线社 · 4.5 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover8.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">角色走动循环测试</h3>
+            <p class="poster-sub">Keyframe · 2.9 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover2.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">光影氛围小短片</h3>
+            <p class="poster-sub">Bloom · 7.0 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover5.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">水下世界概念动画</h3>
+            <p class="poster-sub">AquaFrame · 11 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover1.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">城市夜景时间流</h3>
+            <p class="poster-sub">NeonInk · 6.3 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover4.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">工作室桌面延时</h3>
+            <p class="poster-sub">DeskCam · 1.8 万播放</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Rail 3 · 音乐 -->
+    <section class="rail">
+      <div class="rail-head">
+        <h2 class="rail-title">音乐</h2>
+        <a href="#" class="rail-more">查看全部</a>
+      </div>
+      <div class="rail-track">
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover3.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">日落舞台现场 Live</h3>
+            <p class="poster-sub">SoundYard · 15 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover6.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">暗调原声带混音</h3>
+            <p class="poster-sub">BassRoom · 3.7 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover8.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">钢琴即兴 · 雨夜</h3>
+            <p class="poster-sub">KeysOnly · 9.1 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover7.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">电子氛围铺底 Demo</h3>
+            <p class="poster-sub">Waveform · 2.4 万播放</p>
+          </div>
+        </article>
+        <article class="poster">
+          <div class="poster-cover"><img src="../assets/img/cover2.jpg" alt="" /></div>
+          <div class="poster-meta">
+            <h3 class="poster-title">片场同期声精选</h3>
+            <p class="poster-sub">LocSound · 5.0 万播放</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ═══ Admin ═══ -->
+<main class="view" id="viewAdmin">
+  <div class="admin">
+    <div class="admin-hero">
+      <p class="admin-kicker">Dashboard</p>
+      <h1 class="admin-title">管理台</h1>
+      <p class="admin-sub">待审队列与站内数据一览。海报感数字，少标签。</p>
+    </div>
+
+    <div class="stat-rail">
+      <div class="stat-card">
+        <div class="stat-num">24</div>
+        <div class="stat-label">待审视频</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1,842</div>
+        <div class="stat-label">用户</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">6,391</div>
+        <div class="stat-label">评论</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">48.2k</div>
+        <div class="stat-label">弹幕</div>
+      </div>
+    </div>
+
+    <div class="admin-panel">
+      <div class="admin-tabs" role="tablist">
+        <button type="button" class="is-active" data-tab="videos">待审视频</button>
+        <button type="button" data-tab="users">用户</button>
+        <button type="button" data-tab="comments">评论</button>
+        <button type="button" data-tab="danmaku">弹幕</button>
+      </div>
+
+      <div class="queue" id="queueVideos">
+        <div class="queue-row">
+          <div class="queue-thumb"><img src="../assets/img/cover6.jpg" alt="" /></div>
+          <div class="queue-info">
+            <h4>暗黑奇幻片场实录</h4>
+            <p>CinemaTalk · 投稿于 2 小时前</p>
+          </div>
+          <span class="queue-status">待审</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-approve">通过</button>
+            <button type="button" class="btn-reject">驳回</button>
+          </div>
+        </div>
+        <div class="queue-row">
+          <div class="queue-thumb"><img src="../assets/img/cover3.jpg" alt="" /></div>
+          <div class="queue-info">
+            <h4>户外舞台日落彩排</h4>
+            <p>现场收音 · 投稿于 5 小时前</p>
+          </div>
+          <span class="queue-status">待审</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-approve">通过</button>
+            <button type="button" class="btn-reject">驳回</button>
+          </div>
+        </div>
+        <div class="queue-row">
+          <div class="queue-thumb"><img src="../assets/img/cover4.jpg" alt="" /></div>
+          <div class="queue-info">
+            <h4>调色台前的一小时</h4>
+            <p>剪辑笔记 · 投稿于 昨天</p>
+          </div>
+          <span class="queue-status">待审</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-approve">通过</button>
+            <button type="button" class="btn-reject">驳回</button>
+          </div>
+        </div>
+        <div class="queue-row">
+          <div class="queue-thumb"><img src="../assets/img/cover7.jpg" alt="" /></div>
+          <div class="queue-info">
+            <h4>手绘分镜练习 03</h4>
+            <p>墨线社 · 投稿于 昨天</p>
+          </div>
+          <span class="queue-status">待审</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-approve">通过</button>
+            <button type="button" class="btn-reject">驳回</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="queue" id="queueUsers" hidden>
+        <div class="queue-row">
+          <div class="queue-thumb" style="background: linear-gradient(135deg,#1a1a1a,#333);"></div>
+          <div class="queue-info">
+            <h4>青椒工作室</h4>
+            <p>注册 14 天 · 作品 12</p>
+          </div>
+          <span class="queue-status">正常</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-approve">查看</button>
+            <button type="button" class="btn-reject">限制</button>
+          </div>
+        </div>
+        <div class="queue-row">
+          <div class="queue-thumb" style="background: linear-gradient(135deg,#111,#2a2a2a);"></div>
+          <div class="queue-info">
+            <h4>FrameLab</h4>
+            <p>注册 3 个月 · 作品 48</p>
+          </div>
+          <span class="queue-status">正常</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-approve">查看</button>
+            <button type="button" class="btn-reject">限制</button>
+          </div>
+        </div>
+        <div class="queue-row">
+          <div class="queue-thumb" style="background: linear-gradient(135deg,#0d0d0d,#222);"></div>
+          <div class="queue-info">
+            <h4>新用户_8821</h4>
+            <p>注册 1 天 · 作品 0</p>
+          </div>
+          <span class="queue-status">待核验</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-approve">通过</button>
+            <button type="button" class="btn-reject">驳回</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="queue" id="queueComments" hidden>
+        <div class="queue-row">
+          <div class="queue-thumb"><img src="../assets/img/cover1.jpg" alt="" /></div>
+          <div class="queue-info">
+            <h4>「航拍那段光影太稳了」</h4>
+            <p>夜色里的城市航拍 · 用户 阿茶</p>
+          </div>
+          <span class="queue-status">已发布</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-reject">隐藏</button>
+          </div>
+        </div>
+        <div class="queue-row">
+          <div class="queue-thumb"><img src="../assets/img/cover5.jpg" alt="" /></div>
+          <div class="queue-info">
+            <h4>「配乐和画面节奏绝了」</h4>
+            <p>深海纪录片选段 · 用户 海雾</p>
+          </div>
+          <span class="queue-status">待审</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-approve">通过</button>
+            <button type="button" class="btn-reject">删除</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="queue" id="queueDanmaku" hidden>
+        <div class="queue-row">
+          <div class="queue-thumb"><img src="../assets/img/cover2.jpg" alt="" /></div>
+          <div class="queue-info">
+            <h4>「前方高能」 × 128</h4>
+            <p>胶片感短剧幕后 · 高频弹幕</p>
+          </div>
+          <span class="queue-status">监控中</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-reject">屏蔽词</button>
+          </div>
+        </div>
+        <div class="queue-row">
+          <div class="queue-thumb"><img src="../assets/img/cover8.jpg" alt="" /></div>
+          <div class="queue-info">
+            <h4>「循环了」 × 86</h4>
+            <p>角色走动循环测试 · 高频弹幕</p>
+          </div>
+          <span class="queue-status">正常</span>
+          <div class="queue-actions">
+            <button type="button" class="btn-reject">屏蔽词</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="admin-footer-note">原型级交互 · 不接后端</p>
+  </div>
+</main>
+
+<script>
+(function () {
+  const topbar = document.getElementById("topbar");
+  const viewBrowse = document.getElementById("viewBrowse");
+  const viewAdmin = document.getElementById("viewAdmin");
+  const browseNav = document.getElementById("browseNav");
+  const modeBtns = document.querySelectorAll(".mode-switch button");
+  const partitions = document.getElementById("partitions");
+
+  // Sticky topbar glass on scroll
+  function onScroll() {
+    if (window.scrollY > 24) {
+      topbar.classList.add("is-scrolled");
+    } else {
+      topbar.classList.remove("is-scrolled");
+    }
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Browse / Admin mode switch
+  modeBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const mode = btn.getAttribute("data-mode");
+      modeBtns.forEach(function (b) {
+        b.classList.toggle("is-active", b === btn);
+        b.setAttribute("aria-selected", b === btn ? "true" : "false");
+      });
+      const isBrowse = mode === "browse";
+      viewBrowse.classList.toggle("is-active", isBrowse);
+      viewAdmin.classList.toggle("is-active", !isBrowse);
+      browseNav.style.visibility = isBrowse ? "visible" : "hidden";
+      window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+      onScroll();
+    });
+  });
+
+  // Brand → back to browse
+  document.getElementById("brandHome").addEventListener("click", function (e) {
+    e.preventDefault();
+    modeBtns[0].click();
+  });
+
+  // Nav highlight
+  browseNav.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      browseNav.querySelectorAll("a").forEach(function (a) {
+        a.classList.toggle("is-active", a === link);
+      });
+    });
+  });
+
+  // Partition pills
+  if (partitions) {
+    partitions.querySelectorAll(".pill").forEach(function (pill) {
+      pill.addEventListener("click", function () {
+        partitions.querySelectorAll(".pill").forEach(function (p) {
+          p.classList.toggle("is-active", p === pill);
+        });
+      });
+    });
+  }
+
+  // Admin tabs
+  const tabMap = {
+    videos: "queueVideos",
+    users: "queueUsers",
+    comments: "queueComments",
+    danmaku: "queueDanmaku",
+  };
+  document.querySelectorAll(".admin-tabs button").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      document.querySelectorAll(".admin-tabs button").forEach(function (t) {
+        t.classList.toggle("is-active", t === tab);
+      });
+      const key = tab.getAttribute("data-tab");
+      Object.keys(tabMap).forEach(function (k) {
+        const el = document.getElementById(tabMap[k]);
+        if (el) el.hidden = k !== key;
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

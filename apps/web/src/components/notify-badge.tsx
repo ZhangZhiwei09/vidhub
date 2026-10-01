@@ -14,7 +14,7 @@ export function NotifyBadge() {
   }, [])
 
   return (
-    <Link href="/notifications" className="relative">
+    <Link href="/notifications" className="relative text-[13px] text-white/55 transition hover:text-white">
       通知
       {unread > 0 ? (
         <span className="absolute -right-3 -top-2 rounded-full bg-red-500 px-1.5 text-[10px] leading-4 text-white">

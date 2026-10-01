@@ -10,24 +10,56 @@ export type VideoCardData = {
   clicks: number
 }
 
-export function VideoCard({ video }: { video: VideoCardData }) {
+export function VideoCard({
+  video,
+  variant = 'cinema',
+}: {
+  video: VideoCardData
+  variant?: 'cinema' | 'rail' | 'admin'
+}) {
+  if (variant === 'rail') {
+    return (
+      <Link href={`/video/${video.id}`} className="group block w-[220px] shrink-0">
+        <div className="aspect-video overflow-hidden rounded-[10px] bg-white/10">
+          {video.cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={video.cover}
+              alt={video.title}
+              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-xs text-white/40">无封面</div>
+          )}
+        </div>
+        <h3 className="mt-2 line-clamp-1 text-[13px] font-semibold text-white">{video.title}</h3>
+        <p className="mt-0.5 text-[12px] text-white/45">
+          {video.username} · {video.clicks} 播放
+        </p>
+      </Link>
+    )
+  }
+
   return (
-    <Link href={`/video/${video.id}`} className="group block overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-zinc-200">
-      <div className="aspect-video bg-zinc-200">
+    <Link
+      href={`/video/${video.id}`}
+      className="group block overflow-hidden rounded-[14px] bg-white/[0.04] ring-1 ring-white/10 transition hover:bg-white/[0.07] hover:ring-white/20"
+    >
+      <div className="aspect-video bg-white/10">
         {video.cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={video.cover}
             alt={video.title}
-            className="h-full w-full object-cover transition group-hover:scale-[1.02]"
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-zinc-500">无封面</div>
+          <div className="flex h-full items-center justify-center text-sm text-white/40">无封面</div>
         )}
       </div>
       <div className="space-y-1 p-3">
-        <h3 className="line-clamp-2 text-sm font-medium text-zinc-900">{video.title}</h3>
-        <p className="text-xs text-zinc-500">
+        <h3 className="line-clamp-2 text-sm font-medium text-white">{video.title}</h3>
+        <p className="text-xs text-white/45">
           {video.username} · {video.clicks} 播放
         </p>
       </div>

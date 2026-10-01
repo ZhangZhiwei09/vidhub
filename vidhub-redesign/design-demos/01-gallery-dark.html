@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VidHub — Gallery Dark</title>
+  <!--
+    assumptions:
+    - 1440px 宽桌面为主；移动端做最小可读缩放，不另做独立信息架构
+    - 封面图存在于 ../assets/img/cover1.jpg … cover8.jpg；缺失时以近黑占位块兜底
+    - 「浏览 / 管理」为同页视图切换，不模拟真实鉴权；管理数字为示意
+
+    本方向锚点:
+    - 库风格 Gallery Dark（深色画廊裱框）— Apple Photos / Glass.photo 气质
+    - 苹果语境：深空暗场 · 内容裱框 — UI 退隐，封面是唯一色彩来源
+    - 竖向策展流：顶栏词标 → 全幅 featured → 宽松裱框大图列，分区为极细文字链接
+
+    form 来自哪里:
+    - 视频封面作为发光矩形（内容自带色与光），UI 为暗房裱框（近黑底、发丝描边、无霓虹）
+    - 空间节奏来自画廊挂墙：大留白、单列/宽松双列、极细 metadata，而非卡片墙
+  -->
+  <style>
+    :root {
+      --bg: #0A0A0A;
+      --bg-elevated: #111111;
+      --text: #F2F2F2;
+      --text-muted: #666666;
+      --text-soft: #8A8A8A;
+      --hairline: rgba(255, 255, 255, 0.08);
+      --hairline-strong: rgba(255, 255, 255, 0.14);
+      --frame: rgba(255, 255, 255, 0.06);
+      --font: -apple-system, "SF Pro Display", "Segoe UI", sans-serif;
+      --max: 1440px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* —— Shell —— */
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding: 0 48px 120px;
+    }
+
+    /* —— Top bar —— */
+    .topbar {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 28px 0 24px;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .wordmark {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    .view-switch {
+      display: flex;
+      gap: 28px;
+    }
+
+    .view-switch button {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+
+    .view-switch button:hover { color: var(--text-soft); }
+    .view-switch button.is-active { color: var(--text); }
+
+    /* —— Views —— */
+    .view { display: none; }
+    .view.is-active { display: block; }
+
+    /* —— Browse: manifesto —— */
+    .manifesto {
+      padding: 72px 0 56px;
+      max-width: 640px;
+    }
+
+    .manifesto h1 {
+      font-size: 42px;
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    .manifesto p {
+      margin-top: 16px;
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--text-soft);
+      line-height: 1.65;
+      max-width: 420px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 32px;
+      margin-top: 28px;
+    }
+
+    .cta-row a {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      border-bottom: 1px solid var(--hairline-strong);
+      padding-bottom: 2px;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .cta-row a:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .cta-row a.muted {
+      color: var(--text-soft);
+      border-color: var(--hairline);
+    }
+
+    /* —— Sections (text links, not pills) —— */
+    .sections {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 28px;
+      padding: 8px 0 40px;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .sections button {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-transform: none;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+
+    .sections button:hover { color: var(--text-soft); }
+    .sections button.is-active {
+      color: var(--text);
+    }
+
+    /* —— Featured (near-viewport cover) —— */
+    .featured {
+      margin-top: 48px;
+      margin-bottom: 80px;
+    }
+
+    .featured-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: calc(100vh - 180px);
+      background: var(--bg-elevated);
+      border: 1px solid var(--frame);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .featured-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.35);
+      pointer-events: none;
+    }
+
+    .featured-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 24px;
+      margin-top: 18px;
+    }
+
+    .featured-meta h2 {
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      color: var(--text);
+    }
+
+    .featured-meta .meta {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* —— Gallery grid: spacious framed works —— */
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px 48px;
+    }
+
+    .piece {
+      display: block;
+      transition: transform 0.35s ease, filter 0.35s ease;
+    }
+
+    .piece:hover {
+      transform: scale(1.012);
+      filter: brightness(1.06);
+    }
+
+    .piece-frame {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      background: #0E0E0E;
+      border: 1px solid var(--frame);
+      overflow: hidden;
+    }
+
+    /* Cover as luminous rectangle — subtle lift off the dark wall */
+    .piece-frame img,
+    .featured-frame img {
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    .piece-info {
+      margin-top: 14px;
+    }
+
+    .piece-info h3 {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .piece-info .meta {
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+    }
+
+    .piece--span {
+      grid-column: 1 / -1;
+    }
+
+    .piece--span .piece-frame {
+      aspect-ratio: 21 / 9;
+    }
+
+    /* —— Manage view —— */
+    .dash {
+      padding-top: 64px;
+    }
+
+    .dash-title {
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .dash-sub {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-bottom: 56px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--hairline);
+    }
+
+    .metric {
+      padding: 32px 24px 32px 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .metric + .metric {
+      border-left: 1px solid var(--hairline);
+      padding-left: 32px;
+    }
+
+    .metric .label {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .metric .value {
+      margin-top: 12px;
+      font-size: 40px;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .queue {
+      margin-top: 64px;
+    }
+
+    .queue h2 {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .queue-row {
+      display: grid;
+      grid-template-columns: 96px 1fr auto auto;
+      gap: 24px;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .queue-thumb {
+      width: 96px;
+      aspect-ratio: 16 / 10;
+      background: var(--bg-elevated);
+      border: 1px solid var(--frame);
+      overflow: hidden;
+    }
+
+    .queue-row .title {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .queue-row .who {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .queue-row .status {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--text-soft);
+    }
+
+    .queue-row .actions {
+      display: flex;
+      gap: 20px;
+    }
+
+    .queue-row .actions a {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--text-muted);
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .queue-row .actions a:hover {
+      color: var(--text);
+      border-color: var(--hairline-strong);
+    }
+
+    /* —— Footer —— */
+    .site-foot {
+      margin-top: 96px;
+      padding-top: 24px;
+      border-top: 1px solid var(--hairline);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 900px) {
+      .shell { padding: 0 24px 80px; }
+      .manifesto h1 { font-size: 32px; }
+      .gallery { grid-template-columns: 1fr; gap: 48px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .metric + .metric { border-left: none; padding-left: 0; }
+      .metric:nth-child(even) {
+        border-left: 1px solid var(--hairline);
+        padding-left: 24px;
+      }
+      .queue-row {
+        grid-template-columns: 72px 1fr;
+        gap: 16px;
+      }
+      .queue-row .status,
+      .queue-row .actions { grid-column: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="wordmark" href="#">VidHub</a>
+      <nav class="view-switch" aria-label="视图切换">
+        <button type="button" data-view="browse" class="is-active">浏览</button>
+        <button type="button" data-view="manage">管理</button>
+      </nav>
+    </header>
+
+    <!-- ========== Browse ========== -->
+    <main id="view-browse" class="view is-active" aria-label="浏览">
+      <section class="manifesto">
+        <h1>发现精彩视频</h1>
+        <p>列表、详情与分片投稿已接入。登录后即可上传。</p>
+        <div class="cta-row">
+          <a href="#">去投稿</a>
+          <a class="muted" href="#">热门</a>
+        </div>
+      </section>
+
+      <nav class="sections" aria-label="分区">
+        <button type="button" class="is-active" data-section="全部">全部</button>
+        <button type="button" data-section="动画">动画</button>
+        <button type="button" data-section="游戏">游戏</button>
+        <button type="button" data-section="音乐">音乐</button>
+        <button type="button" data-section="知识">知识</button>
+        <button type="button" data-section="生活">生活</button>
+      </nav>
+
+      <article class="featured">
+        <a class="featured-frame" href="#">
+          <img src="../assets/img/cover1.jpg" alt="午夜剪辑室：色彩分级实录" />
+        </a>
+        <div class="featured-meta">
+          <h2>午夜剪辑室：色彩分级实录</h2>
+          <span class="meta">林析 · 128.4 万播放 · 知识</span>
+        </div>
+      </article>
+
+      <section class="gallery" aria-label="策展列表">
+        <a class="piece" href="#" data-cat="音乐">
+          <div class="piece-frame">
+            <img src="../assets/img/cover2.jpg" alt="舞台日落：户外音乐会剪影" />
+          </div>
+          <div class="piece-info">
+            <h3>舞台日落：户外音乐会剪影</h3>
+            <p class="meta">南岸影像 · 46.2 万播放</p>
+          </div>
+        </a>
+
+        <a class="piece" href="#" data-cat="动画">
+          <div class="piece-frame">
+            <img src="../assets/img/cover3.jpg" alt="纸面光影：手绘分镜到成片" />
+          </div>
+          <div class="piece-info">
+            <h3>纸面光影：手绘分镜到成片</h3>
+            <p class="meta">墨白 · 31.8 万播放</p>
+          </div>
+        </a>
+
+        <a class="piece piece--span" href="#" data-cat="游戏">
+          <div class="piece-frame">
+            <img src="../assets/img/cover4.jpg" alt="遗迹跑图：开放世界构图笔记" />
+          </div>
+          <div class="piece-info">
+            <h3>遗迹跑图：开放世界构图笔记</h3>
+            <p class="meta">灰鸦工作室 · 89.1 万播放</p>
+          </div>
+        </a>
+
+        <a class="piece" href="#" data-cat="生活">
+          <div class="piece-frame">
+            <img src="../assets/img/cover5.jpg" alt="雨夜厨房：一人食的慢镜头" />
+          </div>
+          <div class="piece-info">
+            <h3>雨夜厨房：一人食的慢镜头</h3>
+            <p class="meta">小满 · 22.5 万播放</p>
+          </div>
+        </a>
+
+        <a class="piece" href="#" data-cat="知识">
+          <div class="piece-frame">
+            <img src="../assets/img/cover6.jpg" alt="镜头语言十讲：景别与情绪" />
+          </div>
+          <div class="piece-info">
+            <h3>镜头语言十讲：景别与情绪</h3>
+            <p class="meta">观帧 · 67.3 万播放</p>
+          </div>
+        </a>
+
+        <a class="piece" href="#" data-cat="音乐">
+          <div class="piece-frame">
+            <img src="../assets/img/cover7.jpg" alt="低轩录音室：人声与房间感" />
+          </div>
+          <div class="piece-info">
+            <h3>低轩录音室：人声与房间感</h3>
+            <p class="meta">回声室 · 18.9 万播放</p>
+          </div>
+        </a>
+
+        <a class="piece" href="#" data-cat="动画">
+          <div class="piece-frame">
+            <img src="../assets/img/cover8.jpg" alt="城市微缩：定格动画背后的桌面" />
+          </div>
+          <div class="piece-info">
+            <h3>城市微缩：定格动画背后的桌面</h3>
+            <p class="meta">立方体 · 54.0 万播放</p>
+          </div>
+        </a>
+      </section>
+
+      <footer class="site-foot">VidHub · Gallery Dark 原型</footer>
+    </main>
+
+    <!-- ========== Manage ========== -->
+    <main id="view-manage" class="view" aria-label="管理">
+      <div class="dash">
+        <h1 class="dash-title">管理</h1>
+        <p class="dash-sub">待审、用户与互动概览。数字为示意。</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="label">待审视频</div>
+            <div class="value">24</div>
+          </div>
+          <div class="metric">
+            <div class="label">用户</div>
+            <div class="value">8,412</div>
+          </div>
+          <div class="metric">
+            <div class="label">评论</div>
+            <div class="value">1,286</div>
+          </div>
+          <div class="metric">
+            <div class="label">弹幕</div>
+            <div class="value">46.2k</div>
+          </div>
+        </div>
+
+        <section class="queue">
+          <h2>待审队列</h2>
+
+          <div class="queue-row">
+            <div class="queue-thumb">
+              <img src="../assets/img/cover3.jpg" alt="" />
+            </div>
+            <div>
+              <div class="title">纸面光影：手绘分镜到成片</div>
+              <div class="who">墨白 · 提交于 2 小时前</div>
+            </div>
+            <span class="status">待审</span>
+            <div class="actions">
+              <a href="#">通过</a>
+              <a href="#">驳回</a>
+            </div>
+          </div>
+
+          <div class="queue-row">
+            <div class="queue-thumb">
+              <img src="../assets/img/cover5.jpg" alt="" />
+            </div>
+            <div>
+              <div class="title">雨夜厨房：一人食的慢镜头</div>
+              <div class="who">小满 · 提交于 5 小时前</div>
+            </div>
+            <span class="status">待审</span>
+            <div class="actions">
+              <a href="#">通过</a>
+              <a href="#">驳回</a>
+            </div>
+          </div>
+
+          <div class="queue-row">
+            <div class="queue-thumb">
+              <img src="../assets/img/cover7.jpg" alt="" />
+            </div>
+            <div>
+              <div class="title">低轩录音室：人声与房间感</div>
+              <div class="who">回声室 · 提交于 昨天</div>
+            </div>
+            <span class="status">待审</span>
+            <div class="actions">
+              <a href="#">通过</a>
+              <a href="#">驳回</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="site-foot">VidHub · 管理视图</footer>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var switchBtns = document.querySelectorAll(".view-switch button");
+      var views = {
+        browse: document.getElementById("view-browse"),
+        manage: document.getElementById("view-manage")
+      };
+
+      switchBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var target = btn.getAttribute("data-view");
+          switchBtns.forEach(function (b) {
+            b.classList.toggle("is-active", b === btn);
+          });
+          Object.keys(views).forEach(function (key) {
+            views[key].classList.toggle("is-active", key === target);
+          });
+        });
+      });
+
+      var sectionBtns = document.querySelectorAll(".sections button");
+      var pieces = document.querySelectorAll(".gallery .piece");
+      var featured = document.querySelector(".featured");
+
+      sectionBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var section = btn.getAttribute("data-section");
+          sectionBtns.forEach(function (b) {
+            b.classList.toggle("is-active", b === btn);
+          });
+
+          pieces.forEach(function (piece) {
+            var cat = piece.getAttribute("data-cat");
+            var show = section === "全部" || cat === section;
+            piece.style.display = show ? "" : "none";
+          });
+
+          // Featured stays for 全部 / 知识; hide otherwise to keep wall calm
+          if (featured) {
+            featured.style.display =
+              section === "全部" || section === "知识" ? "" : "none";
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

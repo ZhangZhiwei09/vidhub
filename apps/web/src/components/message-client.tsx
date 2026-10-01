@@ -96,40 +96,42 @@ export function MessageClient({
 
   return (
     <div className="grid gap-4 lg:grid-cols-[240px_1fr]">
-      <aside className="rounded-xl bg-white p-3 ring-1 ring-zinc-200">
-        <h2 className="mb-2 text-sm font-semibold">会话</h2>
+      <aside className="rounded-[14px] border border-white/10 bg-white/[0.04] p-3 backdrop-blur">
+        <h2 className="mb-2 text-sm font-semibold text-white">会话</h2>
         <ul className="space-y-1">
           {peers.map((p) => (
             <li key={p.receiver}>
               <Link
                 href={`/message/${p.receiver}`}
-                className={`block rounded-md px-2 py-2 text-sm hover:bg-zinc-100 ${peerId === p.receiver ? 'bg-zinc-100' : ''}`}
+                className={`block rounded-[10px] px-2 py-2 text-sm transition hover:bg-white/10 ${
+                  peerId === p.receiver ? 'bg-white/10' : ''
+                }`}
               >
-                <p className="font-medium">{p.username || p.receiver}</p>
-                <p className="truncate text-xs text-zinc-500">{p.content}</p>
+                <p className="font-medium text-white">{p.username || p.receiver}</p>
+                <p className="truncate text-xs text-white/45">{p.content}</p>
               </Link>
             </li>
           ))}
         </ul>
-        <div className="mt-4 space-y-2 border-t border-zinc-100 pt-3">
+        <div className="mt-4 space-y-2 border-t border-white/10 pt-3">
           <input
             value={target}
             onChange={(e) => setTarget(e.target.value)}
             placeholder="对方用户 ID"
-            className="w-full rounded-md border border-zinc-300 px-2 py-1.5 text-sm"
+            className="vh-input !py-1.5 text-sm"
           />
           <button
             type="button"
             onClick={() => target && router.push(`/message/${target}`)}
-            className="w-full rounded-md bg-zinc-900 px-2 py-1.5 text-sm text-white"
+            className="vh-btn-accent w-full !rounded-xl px-2 py-1.5 text-sm"
           >
             开始聊天
           </button>
         </div>
       </aside>
-      <section className="flex min-h-[420px] flex-col rounded-xl bg-white p-4 ring-1 ring-zinc-200">
+      <section className="flex min-h-[420px] flex-col rounded-[14px] border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
         {!peerId ? (
-          <p className="m-auto text-sm text-zinc-500">选择或输入用户 ID 开始私信</p>
+          <p className="m-auto text-sm text-white/45">选择或输入用户 ID 开始私信</p>
         ) : (
           <>
             <div className="flex-1 space-y-2 overflow-y-auto">
@@ -139,7 +141,11 @@ export function MessageClient({
                   className={`flex ${r.fromId === selfId ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[70%] rounded-lg px-3 py-2 text-sm ${r.fromId === selfId ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-800'}`}
+                    className={`max-w-[70%] rounded-[12px] px-3 py-2 text-sm ${
+                      r.fromId === selfId
+                        ? 'bg-[var(--vh-accent)] text-white'
+                        : 'bg-white/10 text-white/90'
+                    }`}
                   >
                     {r.content}
                   </div>
@@ -150,13 +156,13 @@ export function MessageClient({
               <input
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm"
+                className="vh-input flex-1 text-sm"
                 placeholder="输入消息"
               />
               <button
                 type="button"
                 onClick={() => void send()}
-                className="rounded-md bg-zinc-900 px-4 py-2 text-sm text-white"
+                className="vh-btn-primary !rounded-xl px-4 py-2 text-sm"
               >
                 发送
               </button>

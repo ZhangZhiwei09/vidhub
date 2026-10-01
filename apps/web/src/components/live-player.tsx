@@ -24,10 +24,10 @@ export function LivePlayer({ playUrl, title }: { playUrl: string; title: string 
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-semibold">{title || '直播间'}</h1>
-      <video ref={videoRef} controls className="aspect-video w-full rounded-xl bg-black" />
-      {error ? <p className="mt-2 text-sm text-amber-700">{error}</p> : null}
-      <p className="mt-2 text-xs text-zinc-500">{playUrl}</p>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-white">{title || '直播间'}</h1>
+      <video ref={videoRef} controls className="aspect-video w-full rounded-[14px] bg-black" />
+      {error ? <p className="mt-2 text-sm text-amber-400">{error}</p> : null}
+      <p className="mt-2 text-xs text-white/40">{playUrl}</p>
     </div>
   )
 }

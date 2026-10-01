@@ -58,7 +58,7 @@ export default async function ChannelTabPage({ params }: Props) {
       .orderBy(desc(videos.createdAt))
     body =
       list.length === 0 ? (
-        <p className="text-sm text-zinc-500">暂无公开作品</p>
+        <p className="text-sm text-white/45">暂无公开作品</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((v) => (
@@ -82,7 +82,7 @@ export default async function ChannelTabPage({ params }: Props) {
       .orderBy(desc(archives.updatedAt))
     body =
       list.length === 0 ? (
-        <p className="text-sm text-zinc-500">暂无收藏</p>
+        <p className="text-sm text-white/45">暂无收藏</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((v) => (
@@ -109,12 +109,15 @@ export default async function ChannelTabPage({ params }: Props) {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
+    <main className="vh-page">
       <ProfileHeader
         user={profile}
         actions={
           isSelf ? (
-            <Link href="/studio/works" className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm">
+            <Link
+              href="/studio/works"
+              className="rounded-full border border-white/25 px-3 py-1.5 text-sm text-white/80 hover:border-white/45 hover:text-white"
+            >
               管理空间
             </Link>
           ) : (
@@ -122,7 +125,7 @@ export default async function ChannelTabPage({ params }: Props) {
               <FollowButton followId={uid} />
               <Link
                 href={`/message/${uid}`}
-                className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm"
+                className="rounded-full border border-white/25 px-3 py-1.5 text-sm text-white/80 hover:border-white/45 hover:text-white"
               >
                 私信
               </Link>

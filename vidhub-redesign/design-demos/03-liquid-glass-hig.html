@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VidHub · Liquid Glass HIG</title>
+  <!--
+    为何选 Apple HIG / 2025 Liquid Glass：
+    VidHub 是「可真正干活的产品 UI」——浏览、投稿、管理同一套系统工具台。
+    Liquid Glass 的半透明折射材质让侧栏与控件随内容取色，通透而不喧宾夺主；
+    HIG 的分段控件、连续圆角、轻阴影保证信息层级清晰，跨用户端与管理端一致。
+
+    Form 来源：
+    Apple Human Interface Guidelines（侧栏导航、segmented control、工具台布局）
+    + 2025 Liquid Glass 软件设计语言（rgba 玻璃条、backdrop-filter blur/saturate、浅色主场）。
+  -->
+  <style>
+    :root {
+      --bg: #F5F5F7;
+      --text: #1D1D1F;
+      --text-secondary: #6E6E73;
+      --text-tertiary: #86868B;
+      --accent: #0071E3;
+      --accent-hover: #0077ED;
+      --accent-press: #006EDB;
+      --glass: rgba(255, 255, 255, 0.72);
+      --glass-strong: rgba(255, 255, 255, 0.82);
+      --glass-border: rgba(255, 255, 255, 0.55);
+      --hairline: rgba(0, 0, 0, 0.08);
+      --hairline-strong: rgba(0, 0, 0, 0.12);
+      --sidebar-w: 240px;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+      --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
+      --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+      --dur: 160ms;
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.47;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      min-width: 1440px;
+      overflow-x: auto;
+    }
+
+    /* Ambient content bleed behind glass sidebar */
+    .app {
+      display: flex;
+      min-height: 100vh;
+      width: 1440px;
+      margin: 0 auto;
+      position: relative;
+      background:
+        radial-gradient(ellipse 60% 50% at 70% 20%, rgba(0, 113, 227, 0.06), transparent 60%),
+        radial-gradient(ellipse 40% 40% at 85% 70%, rgba(90, 200, 250, 0.05), transparent 55%),
+        radial-gradient(ellipse 50% 45% at 30% 80%, rgba(175, 82, 222, 0.04), transparent 50%),
+        var(--bg);
+    }
+
+    /* —— Sidebar: Liquid Glass —— */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 12px 16px;
+      background: var(--glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-right: 1px solid var(--hairline);
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 10px 20px;
+      user-select: none;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: linear-gradient(145deg, #0071E3 0%, #5AC8FA 100%);
+      box-shadow: 0 1px 3px rgba(0, 113, 227, 0.35);
+      display: grid;
+      place-items: center;
+    }
+
+    .brand-mark svg { width: 16px; height: 16px; }
+
+    .brand-name {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .nav-group-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: 12px 12px 6px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      text-align: left;
+      transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+    }
+
+    .nav-item:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-item.active {
+      background: rgba(0, 113, 227, 0.12);
+      color: var(--accent);
+    }
+
+    .nav-item .icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      opacity: 0.85;
+      display: grid;
+      place-items: center;
+    }
+
+    .nav-item.active .icon { opacity: 1; }
+
+    .nav-item .icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sidebar-spacer { flex: 1; }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid var(--hairline);
+      cursor: default;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #A1C4FD, #C2E9FB);
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1D1D1F;
+      flex-shrink: 0;
+    }
+
+    .user-meta { min-width: 0; }
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .user-role {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+
+    /* —— Main —— */
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 28px 36px 48px;
+      overflow-y: auto;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; animation: fadeIn var(--dur) var(--ease); }
+
+    @keyframes fadeIn {
+      from { opacity: 0.6; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      letter-spacing: -0.01em;
+      max-width: 480px;
+      margin-bottom: 20px;
+    }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      padding: 0 18px;
+      border-radius: 980px;
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 560;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: background var(--dur) var(--ease), transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-secondary {
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: rgba(0, 0, 0, 0.09); }
+
+    /* Segmented control */
+    .segmented-wrap {
+      margin-bottom: 24px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      padding: 3px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 9px;
+      gap: 0;
+    }
+
+    .seg-btn {
+      position: relative;
+      height: 28px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: color var(--dur) var(--ease);
+      z-index: 1;
+    }
+
+    .seg-btn.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .seg-indicator {
+      position: absolute;
+      top: 3px;
+      height: 28px;
+      background: var(--glass-strong);
+      backdrop-filter: blur(12px) saturate(160%);
+      -webkit-backdrop-filter: blur(12px) saturate(160%);
+      border-radius: 7px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+      transition: left var(--dur) var(--ease), width var(--dur) var(--ease);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Video grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px 16px;
+    }
+
+    .video-card {
+      border: none;
+      background: transparent;
+      padding: 0;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      color: inherit;
+      border-radius: var(--radius);
+      transition: transform var(--dur) var(--ease);
+    }
+
+    .video-card:hover { transform: translateY(-2px); }
+    .video-card:hover .cover-wrap {
+      box-shadow: var(--shadow-card-hover);
+    }
+    .video-card:hover .cover-wrap img {
+      transform: scale(1.03);
+    }
+
+    .cover-wrap {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #E8E8ED;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow var(--dur) var(--ease);
+    }
+
+    .cover-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 200ms var(--ease);
+    }
+
+    .duration {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.72);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 560;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }
+
+    .card-body { padding: 10px 2px 0; }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 560;
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .card-meta {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      letter-spacing: -0.01em;
+    }
+
+    /* Admin dashboard */
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 6px;
+    }
+
+    .page-sub {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      background: var(--glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--hairline);
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+      transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+      text-align: left;
+      font-family: inherit;
+      color: inherit;
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-1px);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-delta {
+      font-size: 12px;
+      color: #34C759;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .panel {
+      border-radius: var(--radius);
+      background: var(--glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--hairline);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .panel-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity var(--dur) var(--ease);
+    }
+    .panel-link:hover { opacity: 0.75; }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--hairline);
+      background: rgba(0, 0, 0, 0.015);
+    }
+
+    .table td {
+      padding: 12px 20px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--hairline);
+      vertical-align: middle;
+    }
+
+    .table tr:last-child td { border-bottom: none; }
+
+    .table tr {
+      transition: background var(--dur) var(--ease);
+    }
+    .table tbody tr:hover {
+      background: rgba(0, 113, 227, 0.04);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 560;
+    }
+
+    .badge-ok { background: rgba(52, 199, 89, 0.12); color: #248A3D; }
+    .badge-warn { background: rgba(255, 149, 0, 0.12); color: #C93400; }
+    .badge-info { background: rgba(0, 113, 227, 0.1); color: var(--accent); }
+
+    /* Empty / placeholder views */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 420px;
+      text-align: center;
+      padding: 48px;
+    }
+
+    .empty-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.04);
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      color: var(--text-tertiary);
+    }
+
+    .empty-icon svg {
+      width: 26px;
+      height: 26px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .empty-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .empty-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 320px;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="主导航">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M4 3.5v9l9-4.5-9-4.5z" fill="#fff"/>
+          </svg>
+        </div>
+        <span class="brand-name">VidHub</span>
+      </div>
+
+      <div class="nav-group-label">浏览</div>
+      <ul class="nav-list" role="list">
+        <li>
+          <button class="nav-item active" data-view="home" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg></span>
+            首页
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-view="hot" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M12 2c.5 3.5 4 5.5 4 9a4 4 0 1 1-8 0c0-1.5.8-3 1.5-4C8.5 9.5 9 11 10 12c-.5-3 1.5-6.5 2-10z"/><path d="M8 18h8"/></svg></span>
+            热门
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-view="search" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
+            搜索
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-view="upload" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M12 16V5"/><path d="m8 8 4-4 4 4"/><path d="M4 18h16"/></svg></span>
+            投稿
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-view="live" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M5.5 8.5a8 8 0 0 1 0 7"/><path d="M18.5 8.5a8 8 0 0 0 0 7"/><path d="M3 6a11.5 11.5 0 0 1 0 12"/><path d="M21 6a11.5 11.5 0 0 0 0 12"/></svg></span>
+            直播
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-view="messages" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></span>
+            消息
+          </button>
+        </li>
+      </ul>
+
+      <div class="nav-group-label">管理</div>
+      <ul class="nav-list" role="list">
+        <li>
+          <button class="nav-item" data-view="admin-dash" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span>
+            仪表盘
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-view="admin-videos" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3V9z"/></svg></span>
+            视频
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-view="admin-users" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg></span>
+            用户
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-view="admin-comments" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M5 5h14v10H9l-4 3.5V5z"/></svg></span>
+            评论
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-view="admin-danmaku" type="button">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M4 8h16"/><path d="M4 12h10"/><path d="M4 16h13"/></svg></span>
+            弹幕
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="user-chip">
+        <div class="user-avatar">演</div>
+        <div class="user-meta">
+          <div class="user-name">演示用户</div>
+          <div class="user-role">创作者 · 管理员</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <!-- Home -->
+      <section class="view active" id="view-home" data-view-panel="home">
+        <div class="hero">
+          <h1>发现精彩视频</h1>
+          <p>在通透的工作台里浏览、投稿与管理——同一套系统语言，从发现到运营。</p>
+          <div class="btn-row">
+            <button class="btn btn-primary" type="button" data-goto="upload">去投稿</button>
+            <button class="btn btn-secondary" type="button" data-goto="hot">热门</button>
+          </div>
+        </div>
+
+        <div class="segmented-wrap">
+          <div class="segmented" id="category-seg" role="tablist" aria-label="内容分区">
+            <span class="seg-indicator" id="seg-indicator"></span>
+            <button class="seg-btn active" type="button" data-cat="全部" role="tab" aria-selected="true">全部</button>
+            <button class="seg-btn" type="button" data-cat="动画" role="tab" aria-selected="false">动画</button>
+            <button class="seg-btn" type="button" data-cat="游戏" role="tab" aria-selected="false">游戏</button>
+            <button class="seg-btn" type="button" data-cat="音乐" role="tab" aria-selected="false">音乐</button>
+            <button class="seg-btn" type="button" data-cat="知识" role="tab" aria-selected="false">知识</button>
+            <button class="seg-btn" type="button" data-cat="生活" role="tab" aria-selected="false">生活</button>
+          </div>
+        </div>
+
+        <div class="video-grid" id="video-grid">
+          <!-- cards injected by JS -->
+        </div>
+      </section>
+
+      <!-- Browse placeholders -->
+      <section class="view" id="view-hot" data-view-panel="hot">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M12 2c.5 3.5 4 5.5 4 9a4 4 0 1 1-8 0c0-1.5.8-3 1.5-4C8.5 9.5 9 11 10 12c-.5-3 1.5-6.5 2-10z"/></svg></div>
+          <div class="empty-title">热门</div>
+          <div class="empty-desc">当前时段热门内容占位。侧栏切换已接通。</div>
+        </div>
+      </section>
+
+      <section class="view" id="view-search" data-view-panel="search">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+          <div class="empty-title">搜索</div>
+          <div class="empty-desc">全文检索界面占位。</div>
+        </div>
+      </section>
+
+      <section class="view" id="view-upload" data-view-panel="upload">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M12 16V5"/><path d="m8 8 4-4 4 4"/><path d="M4 18h16"/></svg></div>
+          <div class="empty-title">投稿</div>
+          <div class="empty-desc">上传与发布工作流占位。</div>
+        </div>
+      </section>
+
+      <section class="view" id="view-live" data-view-panel="live">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M5.5 8.5a8 8 0 0 1 0 7"/><path d="M18.5 8.5a8 8 0 0 0 0 7"/></svg></div>
+          <div class="empty-title">直播</div>
+          <div class="empty-desc">直播大厅占位。</div>
+        </div>
+      </section>
+
+      <section class="view" id="view-messages" data-view-panel="messages">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
+          <div class="empty-title">消息</div>
+          <div class="empty-desc">系统与私信收件箱占位。</div>
+        </div>
+      </section>
+
+      <!-- Admin dashboard -->
+      <section class="view" id="view-admin-dash" data-view-panel="admin-dash">
+        <h1 class="page-title">仪表盘</h1>
+        <p class="page-sub">站内运营概览 · 与浏览端共用同一套 Liquid Glass 系统</p>
+
+        <div class="stat-grid">
+          <button class="stat-card" type="button" data-goto="admin-videos">
+            <div class="stat-label">视频总量</div>
+            <div class="stat-value">12,480</div>
+            <div class="stat-delta">↑ 3.2% 本周</div>
+          </button>
+          <button class="stat-card" type="button" data-goto="admin-users">
+            <div class="stat-label">活跃用户</div>
+            <div class="stat-value">8, Emp</div>
+            <div class="stat-delta">↑ 1.8% 本周</div>
+          </button>
+          <button class="stat-card" type="button" data-goto="admin-comments">
+            <div class="stat-label">待审评论</div>
+            <div class="stat-value">126</div>
+            <div class="stat-delta" style="color: #FF9500;">需处理</div>
+          </button>
+          <button class="stat-card" type="button" data-goto="admin-danmaku">
+            <div class="stat-label">今日弹幕</div>
+            <div class="stat-value">45.2k</div>
+            <div class="stat-delta">↑ 5.1% 昨日</div>
+          </button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">近期投稿</span>
+            <button class="panel-link" type="button" data-goto="admin-videos">查看全部</button>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>标题</th>
+                <th>分区</th>
+                <th>作者</th>
+                <th>状态</th>
+                <th>播放</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>冬日城市漫步 · 4K HDR</td>
+                <td>生活</td>
+                <td>光影纪行</td>
+                <td><span class="badge badge-ok">已发布</span></td>
+                <td>24.1k</td>
+              </tr>
+              <tr>
+                <td>独立游戏速通：深渊回响</td>
+                <td>游戏</td>
+                <td>帧率实验室</td>
+                <td><span class="badge badge-ok">已发布</span></td>
+                <td>18.6k</td>
+              </tr>
+              <tr>
+                <td>弦乐编曲入门：从动机到和声</td>
+                <td>音乐</td>
+                <td>声景笔记</td>
+                <td><span class="badge badge-warn">审核中</span></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>流体力学可视化实验</td>
+                <td>知识</td>
+                <td>科学工作台</td>
+                <td><span class="badge badge-info">精选</span></td>
+                <td>31.0k</td>
+              </tr>
+              <tr>
+                <td>短篇动画：雨夜车站</td>
+                <td>动画</td>
+                <td>纸飞机工作室</td>
+                <td><span class="badge badge-ok">已发布</span></td>
+                <td>9.4k</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="view" id="view-admin-videos" data-view-panel="admin-videos">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3V9z"/></svg></div>
+          <div class="empty-title">视频管理</div>
+          <div class="empty-desc">视频列表与审核工作流占位。</div>
+        </div>
+      </section>
+
+      <section class="view" id="view-admin-users" data-view-panel="admin-users">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg></div>
+          <div class="empty-title">用户管理</div>
+          <div class="empty-desc">用户与权限管理占位。</div>
+        </div>
+      </section>
+
+      <section class="view" id="view-admin-comments" data-view-panel="admin-comments">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M5 5h14v10H9l-4 3.5V5z"/></svg></div>
+          <div class="empty-title">评论管理</div>
+          <div class="empty-desc">评论审核队列占位。</div>
+        </div>
+      </section>
+
+      <section class="view" id="view-admin-danmaku" data-view-panel="admin-danmaku">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M4 8h16"/><path d="M4 12h10"/><path d="M4 16h13"/></svg></div>
+          <div class="empty-title">弹幕管理</div>
+          <div class="empty-desc">弹幕过滤与举报处理占位。</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const videos = [
+        { cover: 1, title: "冬日城市漫步 · 傍晚光影", author: "光影纪行", views: "24.1万", duration: "12:08", cat: "生活" },
+        { cover: 2, title: "独立游戏速通：深渊回响终章", author: "帧率实验室", views: "18.6万", duration: "28:44", cat: "游戏" },
+        { cover: 3, title: "弦乐编曲入门：从动机到和声", author: "声景笔记", views: "9.2万", duration: "16:21", cat: "音乐" },
+        { cover: 4, title: "流体力学可视化：涡街与层流", author: "科学工作台", views: "31.0万", duration: "22:05", cat: "知识" },
+        { cover: 5, title: "短篇动画：雨夜车站", author: "纸飞机工作室", views: "9.4万", duration: "04:52", cat: "动画" },
+        { cover: 6, title: "周末厨房：手作拉面全流程", author: "日常味觉", views: "15.7万", duration: "19:33", cat: "生活" },
+        { cover: 7, title: "电竞决赛高光：最后十秒", author: "观战席", views: "52.3万", duration: "08:17", cat: "游戏" },
+        { cover: 8, title: "爵士即兴：蓝调尺度练习", author: "夜场排练室", views: "7.8万", duration: "11:40", cat: "音乐" },
+      ];
+
+      const grid = document.getElementById("video-grid");
+      let currentCat = "全部";
+
+      function renderCards(cat) {
+        const list = cat === "全部" ? videos : videos.filter((v) => v.cat === cat);
+        grid.innerHTML = list.map((v) => `
+          <button class="video-card" type="button" data-cat="${v.cat}">
+            <div class="cover-wrap">
+              <img src="../assets/img/cover${v.cover}.jpg" alt="${v.title}" loading="lazy" />
+              <span class="duration">${v.duration}</span>
+            </div>
+            <div class="card-body">
+              <div class="card-title">${v.title}</div>
+              <div class="card-meta">${v.author} · ${v.views} 播放</div>
+            </div>
+          </button>
+        `).join("");
+      }
+
+      renderCards(currentCat);
+
+      /* Segmented control */
+      const seg = document.getElementById("category-seg");
+      const indicator = document.getElementById("seg-indicator");
+      const segBtns = Array.from(seg.querySelectorAll(".seg-btn"));
+
+      function moveIndicator(btn) {
+        const segRect = seg.getBoundingClientRect();
+        const btnRect = btn.getBoundingClientRect();
+        indicator.style.left = (btnRect.left - segRect.left) + "px";
+        indicator.style.width = btnRect.width + "px";
+      }
+
+      function selectSeg(btn) {
+        segBtns.forEach((b) => {
+          b.classList.toggle("active", b === btn);
+          b.setAttribute("aria-selected", b === btn ? "true" : "false");
+        });
+        moveIndicator(btn);
+        currentCat = btn.dataset.cat;
+        renderCards(currentCat);
+      }
+
+      segBtns.forEach((btn) => {
+        btn.addEventListener("click", () => selectSeg(btn));
+      });
+
+      requestAnimationFrame(() => {
+        const active = seg.querySelector(".seg-btn.active");
+        if (active) moveIndicator(active);
+      });
+      window.addEventListener("resize", () => {
+        const active = seg.querySelector(".seg-btn.active");
+        if (active) moveIndicator(active);
+      });
+
+      /* Navigation */
+      const navItems = document.querySelectorAll(".nav-item");
+      const views = document.querySelectorAll("[data-view-panel]");
+
+      function showView(id) {
+        navItems.forEach((item) => {
+          item.classList.toggle("active", item.dataset.view === id);
+        });
+        views.forEach((panel) => {
+          panel.classList.toggle("active", panel.dataset.viewPanel === id);
+        });
+        if (id === "home") {
+          requestAnimationFrame(() => {
+            const active = seg.querySelector(".seg-btn.active");
+            if (active) moveIndicator(active);
+          });
+        }
+      }
+
+      navItems.forEach((item) => {
+        item.addEventListener("click", () => showView(item.dataset.view));
+      });
+
+      document.querySelectorAll("[data-goto]").forEach((el) => {
+        el.addEventListener("click", () => showView(el.dataset.goto));
+      });
+    })();
+  </script>
+</body>
+</html>

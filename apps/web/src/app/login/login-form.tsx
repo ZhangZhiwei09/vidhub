@@ -10,65 +10,56 @@ export function LoginForm({ callbackUrl }: { callbackUrl?: string }) {
   const [regState, regFormAction, regPending] = useActionState(registerAction, initial)
 
   return (
-    <div className="mx-auto grid w-full max-w-md gap-8">
-      <form action={loginFormAction} className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-        <h1 className="text-xl font-semibold text-zinc-900">登录 VidHub</h1>
+    <div className="mx-auto grid w-full max-w-md gap-6">
+      <form
+        action={loginFormAction}
+        className="flex flex-col gap-3 rounded-[18px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur"
+      >
+        <h1 className="text-xl font-semibold tracking-tight text-white">登录 VidHub</h1>
         <input type="hidden" name="callbackUrl" value={callbackUrl || '/'} />
-        <label className="text-sm text-zinc-600">
+        <label className="text-sm text-white/55">
           账号
-          <input
-            name="account"
-            required
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-zinc-900"
-            autoComplete="username"
-          />
+          <input name="account" required className="vh-input mt-1" autoComplete="username" />
         </label>
-        <label className="text-sm text-zinc-600">
+        <label className="text-sm text-white/55">
           密码
           <input
             name="password"
             type="password"
             required
             minLength={6}
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-zinc-900"
+            className="vh-input mt-1"
             autoComplete="current-password"
           />
         </label>
-        {loginState.error ? <p className="text-sm text-red-600">{loginState.error}</p> : null}
-        <button
-          type="submit"
-          disabled={loginPending}
-          className="rounded-md bg-zinc-900 px-4 py-2 text-white disabled:opacity-60"
-        >
+        {loginState.error ? <p className="text-sm text-red-400">{loginState.error}</p> : null}
+        <button type="submit" disabled={loginPending} className="vh-btn-accent mt-1 disabled:opacity-60">
           {loginPending ? '登录中…' : '登录'}
         </button>
       </form>
 
-      <form action={regFormAction} className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-zinc-900">注册</h2>
-        <label className="text-sm text-zinc-600">
+      <form
+        action={regFormAction}
+        className="flex flex-col gap-3 rounded-[18px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur"
+      >
+        <h2 className="text-lg font-semibold tracking-tight text-white">注册</h2>
+        <label className="text-sm text-white/55">
           账号
-          <input name="account" required className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2" />
+          <input name="account" required className="vh-input mt-1" />
         </label>
-        <label className="text-sm text-zinc-600">
+        <label className="text-sm text-white/55">
           昵称（可选）
-          <input name="username" className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2" />
+          <input name="username" className="vh-input mt-1" />
         </label>
-        <label className="text-sm text-zinc-600">
+        <label className="text-sm text-white/55">
           密码
-          <input
-            name="password"
-            type="password"
-            required
-            minLength={6}
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2"
-          />
+          <input name="password" type="password" required minLength={6} className="vh-input mt-1" />
         </label>
-        {regState.error ? <p className="text-sm text-red-600">{regState.error}</p> : null}
+        {regState.error ? <p className="text-sm text-red-400">{regState.error}</p> : null}
         <button
           type="submit"
           disabled={regPending}
-          className="rounded-md border border-zinc-900 px-4 py-2 text-zinc-900 disabled:opacity-60"
+          className="vh-btn-ghost mt-1 disabled:opacity-60"
         >
           {regPending ? '注册中…' : '注册并登录'}
         </button>

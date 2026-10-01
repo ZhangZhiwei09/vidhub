@@ -130,67 +130,66 @@ export function UploadForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mx-auto flex max-w-xl flex-col gap-4 rounded-xl bg-white p-6 ring-1 ring-zinc-200">
-      <h1 className="text-xl font-semibold">投稿</h1>
-      <label className="text-sm text-zinc-600">
+    <form
+      onSubmit={onSubmit}
+      className="mx-auto flex max-w-xl flex-col gap-4 rounded-[18px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur"
+    >
+      <h1 className="text-xl font-semibold tracking-tight text-white">投稿</h1>
+      <label className="text-sm text-white/55">
         标题
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2"
+          className="vh-input mt-1"
           required
         />
       </label>
-      <label className="text-sm text-zinc-600">
+      <label className="text-sm text-white/55">
         简介
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2"
+          className="vh-input mt-1"
           rows={3}
         />
       </label>
-      <label className="text-sm text-zinc-600">
+      <label className="text-sm text-white/55">
         分区
         <select
           value={partitionId}
           onChange={(e) => setPartitionId(Number(e.target.value))}
-          className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2"
+          className="vh-input mt-1"
         >
           {PARTITIONS.filter((p) => p.id !== 0).map((p) => (
-            <option key={p.id} value={p.id}>
+            <option key={p.id} value={p.id} className="text-black">
               {p.name}
             </option>
           ))}
         </select>
       </label>
-      <label className="text-sm text-zinc-600">
+      <label className="text-sm text-white/55">
         视频文件
         <input
           type="file"
           accept="video/*"
-          className="mt-1 block w-full text-sm"
+          className="mt-1 block w-full text-sm text-white/70 file:mr-3 file:rounded-lg file:border-0 file:bg-white/15 file:px-3 file:py-1.5 file:text-white"
           onChange={(e) => setVideoFile(e.target.files?.[0] ?? null)}
           required
         />
       </label>
-      <label className="text-sm text-zinc-600">
+      <label className="text-sm text-white/55">
         封面图片
         <input
           type="file"
           accept="image/*"
-          className="mt-1 block w-full text-sm"
+          className="mt-1 block w-full text-sm text-white/70 file:mr-3 file:rounded-lg file:border-0 file:bg-white/15 file:px-3 file:py-1.5 file:text-white"
           onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
           required
         />
       </label>
-      {progress ? <p className="text-sm text-zinc-500">{progress}</p> : null}
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded-md bg-zinc-900 px-4 py-2 text-white disabled:opacity-60"
-      >
+      {progress ? <p className="text-sm text-white/45">{progress}</p> : null}
+      {error ? <p className="text-sm text-red-400">{error}</p> : null}
+      <button type="submit" disabled={pending} className="vh-btn-accent disabled:opacity-60">
         {pending ? '上传中…' : '上传并提交审核'}
       </button>
     </form>

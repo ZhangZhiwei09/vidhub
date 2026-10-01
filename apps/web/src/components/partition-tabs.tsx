@@ -11,7 +11,11 @@ export function PartitionTabs({ activeId = 0 }: { activeId?: number }) {
           <Link
             key={p.id}
             href={href}
-            className={`rounded-full px-3 py-1.5 text-sm ${active ? 'bg-zinc-900 text-white' : 'bg-white text-zinc-700 ring-1 ring-zinc-200 hover:bg-zinc-50'}`}
+            className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition ${
+              active
+                ? 'bg-white text-black'
+                : 'border border-white/20 text-white/70 hover:border-white/40 hover:text-white'
+            }`}
           >
             {p.name}
           </Link>

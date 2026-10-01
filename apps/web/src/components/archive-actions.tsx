@@ -35,14 +35,22 @@ export function ArchiveActions({ vid }: { vid: number }) {
       <button
         type="button"
         onClick={() => void toggle('like', !isLike)}
-        className={`rounded-md px-3 py-1.5 text-sm ring-1 ${isLike ? 'bg-zinc-900 text-white' : 'bg-white text-zinc-800 ring-zinc-300'}`}
+        className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
+          isLike
+            ? 'bg-white text-black'
+            : 'border border-white/25 text-white/80 hover:border-white/45 hover:text-white'
+        }`}
       >
         {isLike ? '已赞' : '点赞'}
       </button>
       <button
         type="button"
         onClick={() => void toggle('collect', !isCollect)}
-        className={`rounded-md px-3 py-1.5 text-sm ring-1 ${isCollect ? 'bg-zinc-900 text-white' : 'bg-white text-zinc-800 ring-zinc-300'}`}
+        className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
+          isCollect
+            ? 'bg-white text-black'
+            : 'border border-white/25 text-white/80 hover:border-white/45 hover:text-white'
+        }`}
       >
         {isCollect ? '已收藏' : '收藏'}
       </button>

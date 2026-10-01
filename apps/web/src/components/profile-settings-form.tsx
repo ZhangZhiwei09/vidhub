@@ -81,16 +81,16 @@ export function ProfileSettingsForm() {
 
   return (
     <div className="mx-auto grid max-w-xl gap-6">
-      <section className="rounded-xl bg-white p-6 ring-1 ring-zinc-200">
-        <h2 className="font-semibold">头像</h2>
+      <section className="rounded-[18px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
+        <h2 className="font-semibold text-white">头像</h2>
         <div className="mt-4 flex items-center gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={avatar || '/next.svg'}
             alt=""
-            className="h-16 w-16 rounded-full bg-zinc-100 object-cover"
+            className="h-16 w-16 rounded-full bg-white/10 object-cover"
           />
-          <label className="cursor-pointer rounded-md border border-zinc-300 px-3 py-2 text-sm">
+          <label className="cursor-pointer rounded-full border border-white/25 px-3 py-2 text-sm text-white/80 hover:border-white/45 hover:text-white">
             更换头像
             <input
               type="file"
@@ -102,46 +102,51 @@ export function ProfileSettingsForm() {
         </div>
       </section>
 
-      <form onSubmit={saveProfile} className="space-y-4 rounded-xl bg-white p-6 ring-1 ring-zinc-200">
-        <h2 className="font-semibold">基本资料</h2>
-        <label className="block text-sm text-zinc-600">
+      <form
+        onSubmit={saveProfile}
+        className="space-y-4 rounded-[18px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur"
+      >
+        <h2 className="font-semibold text-white">基本资料</h2>
+        <label className="block text-sm text-white/55">
           昵称
           <input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
             maxLength={32}
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2"
+            className="vh-input mt-1"
           />
         </label>
-        <label className="block text-sm text-zinc-600">
+        <label className="block text-sm text-white/55">
           签名
           <textarea
             value={sign}
             onChange={(e) => setSign(e.target.value)}
             maxLength={200}
             rows={3}
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2"
+            className="vh-input mt-1"
           />
         </label>
-        <label className="block text-sm text-zinc-600">
+        <label className="block text-sm text-white/55">
           性别
           <select
             value={sex}
             onChange={(e) => setSex(e.target.value as typeof sex)}
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2"
+            className="vh-input mt-1"
           >
-            <option value="unknown">保密</option>
-            <option value="male">男</option>
-            <option value="female">女</option>
+            <option value="unknown" className="text-black">
+              保密
+            </option>
+            <option value="male" className="text-black">
+              男
+            </option>
+            <option value="female" className="text-black">
+              女
+            </option>
           </select>
         </label>
-        {msg ? <p className="text-sm text-emerald-700">{msg}</p> : null}
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-md bg-zinc-900 px-4 py-2 text-white disabled:opacity-60"
-        >
+        {msg ? <p className="text-sm text-emerald-400">{msg}</p> : null}
+        <button type="submit" disabled={pending} className="vh-btn-accent disabled:opacity-60">
           {pending ? '保存中…' : '保存'}
         </button>
       </form>
