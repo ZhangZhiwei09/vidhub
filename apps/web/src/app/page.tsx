@@ -47,7 +47,7 @@ export default async function HomePage() {
       </section>
 
       {list.length === 0 ? (
-        <p className="text-zinc-500">暂无视频。启动 Postgres 并投稿后将显示在这里。</p>
+        <p className="text-zinc-500">暂无已通过审核的视频。登录后去投稿，管理员在「管理 → 视频」通过后即可显示。</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((v) => (
