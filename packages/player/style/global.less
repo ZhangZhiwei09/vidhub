@@ -1,0 +1,165 @@
+@commonColor: #fff;
+@toolbarHeight: 50px;
+@bottombarHeight: 40px;
+@playrateItemHeight: 26px;
+// 小尺寸字体
+@smallSizeFont: 12px;
+// B站专属淡蓝色
+@plainBlue: #00a1d6;
+// 深蓝色
+@navyBlue: #007aff;
+// 最终选择了#ff0作为整个播放器的主题色
+@themeColor: #f00;
+@progressColor: #f00;
+@subtitleColor: rgb(254, 146, 0);
+@backgroundColor: hsla(0, 0%, 100%, 0.15);
+@zIndex: 50;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+video {
+  max-width: 100%;
+  max-height: 100%;
+  outline: none;
+  touch-action: none;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+#video {
+  height: 300px;
+  width: 600px;
+  resize: both;
+  overflow: auto;
+  margin: 100px auto;
+}
+
+#wplayer {
+  svg {
+    width: 100%;
+    height: 100%;
+    fill: #fff;
+    transition: transform 0.5s ease;
+  }
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  transform: all 0.5s ease;
+
+  .wplayer {
+    &-pauseIcon {
+      position: absolute;
+      right: 10px;
+      bottom: calc(@bottombarHeight + 10px);
+      img {
+        width: 100px;
+        height: auto;
+      }
+    }
+
+    &-wrapper {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      transform: all 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-video-icon {
+      position: relative;
+      display: flex;
+      height: 100%;
+      svg {
+        width: 100%;
+        height: 100%;
+        opacity: 0.8;
+        path {
+          fill: @commonColor;
+        }
+      }
+    }
+
+    &-video-set {
+      bottom: 48px;
+      position: absolute;
+      background: rgba(21, 21, 21, 0.9);
+      text-align: center;
+      border-radius: 2px;
+      padding: 5px 5px;
+      left: 50%;
+      white-space: nowrap;
+      transform: translateX(-50%);
+      animation: slideIn 0.5s ease;
+      font-size: 13px;
+    }
+
+    &-video-set-hidden {
+      display: none !important;
+    }
+
+    // 截图组件
+    &-video-screenshot {
+      svg {
+        transition: transform 0.25s ease;
+      }
+    }
+    &-video-screenshot-animate {
+      transform: scale(0.85);
+    }
+  }
+}
+
+.flex-vertical-center {
+  display: flex;
+  align-items: center;
+}
+
+.wplayer-live {
+  .wplayer-video-duration-time {
+    display: none;
+  }
+  .wplayer-video-mediumbar {
+    display: none;
+  }
+  .wplayer-danmaku-input-wrapper {
+    display: none;
+  }
+  .wplayer-video-danmaku-setting {
+    display: none;
+  }
+  .wplayer-video-settings {
+    display: none;
+  }
+}
+
+// 水平垂直居中
+.flex-vertical-horizontal-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wplayer-hidden {
+  display: none;
+}

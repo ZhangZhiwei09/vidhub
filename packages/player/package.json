@@ -1,0 +1,31 @@
+{
+  "name": "@vidhub/player",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./player.d.ts",
+      "default": "./index.ts"
+    },
+    "./style": "./style/index.css"
+  },
+  "scripts": {
+    "build:css": "lessc style/index.less style/index.css",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo \"no lint yet\"",
+    "test": "echo \"no tests yet\""
+  },
+  "sideEffects": [
+    "./style/**",
+    "./index.ts"
+  ],
+  "dependencies": {
+    "be-full": "^0.1.4",
+    "mp4box": "^0.5.2"
+  },
+  "devDependencies": {
+    "less": "^4.2.0",
+    "typescript": "^5.8.2"
+  }
+}

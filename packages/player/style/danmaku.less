@@ -1,0 +1,148 @@
+.wplayer-video-danmaku-message {
+  user-select: none;
+  white-space: pre;
+  pointer-events: none;
+  perspective: 500px;
+  display: inline-block;
+  will-change: transform;
+  font-weight: normal;
+  line-height: 1.125;
+  font-family: SimHei, 'Microsoft JhengHei', Arial, Helvetica, sans-serif;
+  text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px,
+    rgb(0 0 0) -1px 0px 1px;
+  opacity: 1;
+  margin-left: 0px;
+}
+
+.wplayer-danmaku-input {
+  background-color: transparent;
+  width: calc(100% - 40px);
+  height: 50%;
+  line-height: 100%;
+  color: #fff;
+  font-size: 13px;
+  outline: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+.wplayer-danmaku-input-wrapper {
+  box-sizing: border-box;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background-color: hsla(0, 0%, 100%, 0.15);
+  border-radius: 2px;
+}
+
+.wplayer-danmaku-item {
+  display: inline-block;
+  pointer-events: none;
+  user-select: none;
+  cursor: default;
+  white-space: nowrap;
+  text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
+}
+
+.wplayer-danmaku-right {
+  position: absolute;
+  right: 0;
+  transform: translateX(100%);
+  &.wplayer-danmaku-move {
+    will-change: transform;
+    animation-name: danmaku;
+    animation-timing-function: linear;
+    // animation-play-state: paused;
+  }
+}
+
+.wplayer-danmaku-top,
+.wplayer-danmaku-bottom {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  visibility: hidden;
+}
+
+.wplayer-danmaku-move {
+  will-change: visibility;
+  animation-name: danmaku-center;
+  animation-timing-function: linear;
+  // animation-play-state: paused;
+}
+
+.wplayer-danmaku-send {
+  height: 100%;
+  width: 50px;
+  text-align: center;
+  line-height: 30px;
+  background-color: transparent;
+  color: #fff;
+  font-size: 13px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.wplayer-video-danmaku-container {
+  position: absolute;
+  background-color: transparent;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 30;
+}
+
+.wplayer-video-danmaku-loading-base {
+  position: absolute;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: @backgroundColor;
+  padding: 10px 10px;
+  box-sizing: content-box;
+  color: #fff;
+  border-radius: 5px;
+  left: 5px;
+  bottom: 60px;
+  overflow: hidden;
+  transition: all 1.5s ease;
+  font-size: 14px;
+}
+
+.wplayer-video-danmaku-loading {
+  left: 50%;
+  bottom: 50%;
+  transform: translate(-50%, 50%);
+}
+
+.wplayer-video-danmaku-shaking {
+  animation: shake 2.5s 0.15s linear infinite;
+}
+
+.wplayer-video-danmaku-loading-hide {
+  transform: scale(0);
+  opacity: 0;
+}
+
+.wplayer-paused .wplayer-danmaku-move {
+  animation-play-state: paused !important;
+}
+
+@keyframes danmaku {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes danmaku-center {
+  from {
+    visibility: visible;
+  }
+  to {
+    visibility: visible;
+  }
+}

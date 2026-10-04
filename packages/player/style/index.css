@@ -1,0 +1,677 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
+video {
+  max-width: 100%;
+  max-height: 100%;
+  outline: none;
+  touch-action: none;
+  object-fit: cover;
+  cursor: pointer;
+}
+#video {
+  height: 300px;
+  width: 600px;
+  resize: both;
+  overflow: auto;
+  margin: 100px auto;
+}
+#wplayer {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  transform: all 0.5s ease;
+}
+#wplayer svg {
+  width: 100%;
+  height: 100%;
+  fill: #fff;
+  transition: transform 0.5s ease;
+}
+#wplayer .wplayer-pauseIcon {
+  position: absolute;
+  right: 10px;
+  bottom: calc(40px + 10px);
+}
+#wplayer .wplayer-pauseIcon img {
+  width: 100px;
+  height: auto;
+}
+#wplayer .wplayer-wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  transform: all 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#wplayer .wplayer-video-icon {
+  position: relative;
+  display: flex;
+  height: 100%;
+}
+#wplayer .wplayer-video-icon svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+#wplayer .wplayer-video-icon svg path {
+  fill: #fff;
+}
+#wplayer .wplayer-video-set {
+  bottom: 48px;
+  position: absolute;
+  background: rgba(21, 21, 21, 0.9);
+  text-align: center;
+  border-radius: 2px;
+  padding: 5px 5px;
+  left: 50%;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  animation: slideIn 0.5s ease;
+  font-size: 13px;
+}
+#wplayer .wplayer-video-set-hidden {
+  display: none !important;
+}
+#wplayer .wplayer-video-screenshot svg {
+  transition: transform 0.25s ease;
+}
+#wplayer .wplayer-video-screenshot-animate {
+  transform: scale(0.85);
+}
+.flex-vertical-center {
+  display: flex;
+  align-items: center;
+}
+.wplayer-live .wplayer-video-duration-time {
+  display: none;
+}
+.wplayer-live .wplayer-video-mediumbar {
+  display: none;
+}
+.wplayer-live .wplayer-danmaku-input-wrapper {
+  display: none;
+}
+.wplayer-live .wplayer-video-danmaku-setting {
+  display: none;
+}
+.wplayer-live .wplayer-video-settings {
+  display: none;
+}
+.flex-vertical-horizontal-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wplayer-hidden {
+  display: none;
+}
+.wplayer-video-loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 49;
+  background-color: rgba(0, 0, 0, 0.4);
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.wplayer-video-loading-loadingbox {
+  height: 30px;
+  width: 30px;
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  border-radius: 100%;
+  animation: circle infinite 0.75s linear;
+}
+.wplayer-video-loading-errorbox {
+  height: 30px;
+  width: 30px;
+  background-color: red;
+}
+.wplayer-video-loading-msgbox {
+  padding: 0px 5px;
+  color: #fff;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.wplayer-video-mask-loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 49;
+  background-color: #000;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+.wplayer-loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 49;
+  background-color: rgba(0, 0, 0, 0.4);
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+@keyframes circle {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.wplayer-video-controller {
+  box-sizing: border-box;
+  min-width: 30px;
+  display: flex;
+  padding: 4px;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #fff;
+  opacity: 0.9;
+  position: relative;
+}
+.wplayer-video-controller:hover svg {
+  opacity: 1 !important;
+}
+.wplayer-video-controller:hover .video-controller-span {
+  opacity: 1;
+}
+.wplayer-video-toolbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  color: #fff;
+  padding: 0 0 10px 0;
+  transition: all 0.3s ease;
+  z-index: 49;
+  background-image: linear-gradient(to top, #000, #0006, #0000);
+  background-position: bottom;
+  background-repeat: repeat-x;
+}
+.wplayer-video-toolbar-hidden {
+  transform: translateY(47px);
+}
+.wplayer-video-mediumbar {
+  display: flex;
+}
+.wplayer-video-mediumbar-left,
+.wplayer-video-mediumbar-right {
+  height: 100%;
+}
+.wplayer-video-mediumbar-medium {
+  flex: 1;
+}
+.wplayer-video-start-pause {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.wplayer-video-bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 5px 0 5px;
+  position: relative;
+  height: 40px;
+}
+.wplayer-video-bottombar-left,
+.wplayer-video-bottombar-right {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.wplayer-video-bottombar-medium {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+.wplayer-video-bottombar-right {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-right: 10px;
+  height: 100%;
+}
+.wplayer-video-volume {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.wplayer-video-volume .wplayer-video-volume-set {
+  position: absolute;
+  width: 32px;
+  height: 100px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.wplayer-video-volume .wplayer-video-volume-set .wplayer-video-volume-show {
+  width: 100%;
+  height: 15px;
+  line-height: 15px;
+  text-align: center;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+.wplayer-video-volume .wplayer-video-volume-set .wplayer-video-volume-progress {
+  border-radius: 2px;
+  width: 3px;
+  padding-top: 5px;
+  height: calc(100% - 15px - 5px);
+  margin-left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.wplayer-video-volume .wplayer-video-volume-set .wplayer-video-volume-progress .wplayer-video-volume-completed {
+  height: 50%;
+  background-color: #f00;
+}
+.wplayer-video-volume .wplayer-video-volume-set .wplayer-video-volume-progress .wplayer-video-volume-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #f00;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 51;
+}
+.wplayer-video-volume .wplayer-video-volume-set .wplayer-video-volume-progress .wplayer-video-volume-progresss {
+  height: 70px;
+}
+.wplayer-video-progress {
+  width: calc(100% - 25px);
+  margin: 0 auto;
+  height: 3px;
+  transition: height 0.5s ease;
+  background-color: hsla(0, 0%, 100%, 0.2);
+  cursor: pointer;
+  position: relative;
+}
+.wplayer-video-progress-pretime {
+  position: absolute;
+  left: 0;
+  top: -28px;
+  height: 15px;
+  width: 35px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  line-height: 15px;
+  text-align: center;
+  font-size: 10px;
+  display: none;
+  z-index: 51;
+}
+.wplayer-video-progress-thumbnails {
+  position: absolute;
+  left: 0;
+  bottom: 15px;
+  width: 160px;
+  height: 90px;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: none;
+  overflow: hidden;
+}
+.wplayer-video-progress-buffered {
+  left: 0;
+  height: 100%;
+  width: 0;
+  position: absolute;
+  background-color: hsla(0, 0%, 100%, 0.3);
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.wplayer-video-progress-completed {
+  position: absolute;
+  background-color: #f00;
+  height: 100%;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  left: 0;
+  width: 0;
+  z-index: 51;
+}
+.wplayer-video-progress-dot-hidden {
+  opacity: 0;
+}
+.wplayer-video-progress-dot {
+  position: absolute;
+  left: 0px;
+  height: 12px;
+  width: 12px;
+  border-radius: 100%;
+  background-color: #f00;
+  cursor: pointer;
+  z-index: 51;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity 0.6s ease;
+}
+.wplayer-video-danmaku-message {
+  user-select: none;
+  white-space: pre;
+  pointer-events: none;
+  perspective: 500px;
+  display: inline-block;
+  will-change: transform;
+  font-weight: normal;
+  line-height: 1.125;
+  font-family: SimHei, 'Microsoft JhengHei', Arial, Helvetica, sans-serif;
+  text-shadow: #000000 1px 0px 1px, #000000 0px 1px 1px, #000000 0px -1px 1px, #000000 -1px 0px 1px;
+  opacity: 1;
+  margin-left: 0px;
+}
+.wplayer-danmaku-input {
+  background-color: transparent;
+  width: calc(100% - 40px);
+  height: 50%;
+  line-height: 100%;
+  color: #fff;
+  font-size: 13px;
+  outline: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+.wplayer-danmaku-input-wrapper {
+  box-sizing: border-box;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background-color: hsla(0, 0%, 100%, 0.15);
+  border-radius: 2px;
+}
+.wplayer-danmaku-item {
+  display: inline-block;
+  pointer-events: none;
+  user-select: none;
+  cursor: default;
+  white-space: nowrap;
+  text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
+}
+.wplayer-danmaku-right {
+  position: absolute;
+  right: 0;
+  transform: translateX(100%);
+}
+.wplayer-danmaku-right.wplayer-danmaku-move {
+  will-change: transform;
+  animation-name: danmaku;
+  animation-timing-function: linear;
+}
+.wplayer-danmaku-top,
+.wplayer-danmaku-bottom {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  visibility: hidden;
+}
+.wplayer-danmaku-move {
+  will-change: visibility;
+  animation-name: danmaku-center;
+  animation-timing-function: linear;
+}
+.wplayer-danmaku-send {
+  height: 100%;
+  width: 50px;
+  text-align: center;
+  line-height: 30px;
+  background-color: transparent;
+  color: #fff;
+  font-size: 13px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.wplayer-video-danmaku-container {
+  position: absolute;
+  background-color: transparent;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 30;
+}
+.wplayer-video-danmaku-loading-base {
+  position: absolute;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: hsla(0, 0%, 100%, 0.15);
+  padding: 10px 10px;
+  box-sizing: content-box;
+  color: #fff;
+  border-radius: 5px;
+  left: 5px;
+  bottom: 60px;
+  overflow: hidden;
+  transition: all 1.5s ease;
+  font-size: 14px;
+}
+.wplayer-video-danmaku-loading {
+  left: 50%;
+  bottom: 50%;
+  transform: translate(-50%, 50%);
+}
+.wplayer-video-danmaku-shaking {
+  animation: shake 2.5s 0.15s linear infinite;
+}
+.wplayer-video-danmaku-loading-hide {
+  transform: scale(0);
+  opacity: 0;
+}
+.wplayer-paused .wplayer-danmaku-move {
+  animation-play-state: paused !important;
+}
+@keyframes danmaku {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes danmaku-center {
+  from {
+    visibility: visible;
+  }
+  to {
+    visibility: visible;
+  }
+}
+.wplayer-setting-animate {
+  transform: rotate(360deg);
+}
+.wplayer-setting-box {
+  position: absolute;
+  height: auto;
+  max-height: 300px;
+  backdrop-filter: saturate(180%) blur(20px);
+  font-size: 13px;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  bottom: 48px;
+  background: rgba(21, 21, 21, 0.9);
+  text-align: center;
+  border-radius: 2px;
+  padding: 5px 5px;
+  left: 50%;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  animation: slideIn 0.5s ease;
+}
+.wplayer-video-setting-main,
+.wplayer-video-subsetting-playrate {
+  width: 100%;
+  backdrop-filter: saturate(180%) blur(20px);
+}
+.wplayer-video-settings-set,
+.wplayer-video-danmaku-set {
+  height: auto;
+  max-height: 300px;
+  backdrop-filter: saturate(180%) blur(20px);
+  border-radius: 3px;
+  font-size: 13px;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.wplayer-video-subsetting-item {
+  display: flex;
+  width: 100%;
+  height: 35px;
+  cursor: pointer;
+  color: #fffc;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 1;
+  overflow: hidden;
+}
+.wplayer-video-subsetting-itemleft {
+  white-space: nowrap;
+  align-items: center;
+  display: flex;
+}
+.wplayer-video-subsetting-itemleft .wplayer-video-icon {
+  height: 24px;
+  width: 24px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  display: flex;
+}
+.wplayer-video-subsetting-itemright {
+  display: flex;
+  align-items: center;
+}
+.wplayer-video-subsettings-itemleft-icon {
+  height: 24px;
+  width: 24px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  display: flex;
+}
+.wplayer-video-subsettings-itemleft-icon,
+.wplayer-video-subsettings-itemright-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 24px;
+}
+.wplayer-comment-setting-box {
+  position: absolute;
+  background: rgba(28, 28, 28, 0.9);
+  bottom: 41px;
+  left: 0;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  padding: 10px 10px 16px;
+  font-size: 14px;
+  transition: all 0.3s ease-in-out;
+}
+.wplayer-comment-setting-box label {
+  cursor: pointer;
+}
+.wplayer-comment-setting-box input[type='radio'] {
+  display: none;
+}
+.wplayer-comment-setting-color {
+  font-size: 0;
+}
+.wplayer-comment-setting-color label {
+  font-size: 0;
+  padding: 6px;
+  display: inline-block;
+}
+.wplayer-comment-setting-color span {
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  border-radius: 50%;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.wplayer-comment-setting-color input:checked + span {
+  border: 4px solid #1c1c1c;
+}
+.wplayer-comment-setting-title {
+  font-size: 13px;
+  color: #fff;
+  line-height: 30px;
+}
+.wplayer-comment-setting-type {
+  font-size: 0;
+}
+.wplayer-comment-setting-type .wplayer-comment-setting-title {
+  margin-bottom: 6px;
+}
+.wplayer-comment-setting-type label:nth-child(2) span {
+  border-radius: 4px 0 0 4px;
+}
+.wplayer-comment-setting-type label:nth-child(4) span {
+  border-radius: 0 4px 4px 0;
+}
+.wplayer-comment-setting-type span {
+  width: 33%;
+  padding: 4px 6px;
+  line-height: 16px;
+  display: inline-block;
+  font-size: 12px;
+  color: #fff;
+  border: 1px solid #fff;
+  margin-right: -1px;
+  box-sizing: border-box;
+  text-align: center;
+  cursor: pointer;
+}
+.wplayer-comment-setting-type input:checked + span {
+  background: #e4e4e6;
+  color: #1c1c1c;
+}

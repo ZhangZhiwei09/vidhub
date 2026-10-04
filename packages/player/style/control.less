@@ -1,0 +1,143 @@
+.wplayer-video-controller {
+  box-sizing: border-box;
+  min-width: 30px;
+  display: flex;
+  padding: 4px;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #fff;
+  opacity: 0.9;
+  position: relative;
+  &:hover {
+    svg {
+      opacity: 1 !important;
+    }
+    .video-controller-span {
+      opacity: 1;
+    }
+  }
+}
+
+.wplayer-video-toolbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  color: @commonColor;
+  padding: 0 0 10px 0;
+  transition: all 0.3s ease;
+  z-index: 49;
+  background-image: linear-gradient(to top, #000, #0006, #0000);
+  background-position: bottom;
+  background-repeat: repeat-x;
+}
+
+.wplayer-video-toolbar-hidden {
+  transform: translateY(47px);
+}
+
+.wplayer-video-mediumbar {
+  display: flex;
+}
+
+.wplayer-video-mediumbar-left,
+.wplayer-video-mediumbar-right {
+  height: 100%;
+}
+
+.wplayer-video-mediumbar-medium {
+  flex: 1;
+}
+
+.wplayer-video-start-pause {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.wplayer-video-bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 5px 0 5px;
+  position: relative;
+  height: @bottombarHeight;
+  &-left,
+  &-right {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  &-medium {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    position: relative;
+  }
+}
+
+.wplayer-video-bottombar-right {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-right: 10px;
+  height: 100%;
+}
+
+.wplayer-video-volume {
+  display: flex;
+  align-items: center;
+  position: relative;
+  .wplayer-video-volume-set {
+    position: absolute;
+    width: 32px;
+    height: 100px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    .wplayer-video-volume-show {
+      width: 100%;
+      height: 15px;
+      line-height: 15px;
+      text-align: center;
+      font-size: @smallSizeFont;
+      box-sizing: border-box;
+    }
+    .wplayer-video-volume-progress {
+      border-radius: 2px;
+      width: 3px;
+      padding-top: 5px;
+      height: calc(100% - 15px - 5px);
+      margin-left: 50%;
+      transform: translateX(-50%);
+      background-color: @commonColor;
+      position: relative;
+      display: flex;
+      flex-direction: column-reverse;
+      .wplayer-video-volume-completed {
+        height: 50%;
+        background-color: @progressColor;
+      }
+
+      .wplayer-video-volume-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: @progressColor;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: @zIndex + 1;
+      }
+      .wplayer-video-volume-progresss {
+        height: 70px;
+      }
+    }
+  }
+}
