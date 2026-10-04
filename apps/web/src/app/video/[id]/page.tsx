@@ -4,7 +4,7 @@ import { users, videos } from '@vidhub/db/schema'
 import { db } from '@/lib/db'
 import { ArchiveActions } from '@/components/archive-actions'
 import { CommentSection } from '@/components/comment-section'
-import { VideoPlayerWithDanmaku } from '@/components/video-player-danmaku'
+import { VideoPlayer } from '@/components/video-player'
 import { FollowButton } from '@/components/follow-button'
 
 type Props = { params: Promise<{ id: string }> }
@@ -50,7 +50,7 @@ export default async function VideoDetailPage({ params }: Props) {
   return (
     <main className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[1fr_280px]">
       <section>
-        <VideoPlayerWithDanmaku
+        <VideoPlayer
           vid={row.id}
           src={row.url}
           poster={row.cover || undefined}
