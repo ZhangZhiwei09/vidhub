@@ -103,7 +103,10 @@ export function VideoPlayer({
   }, [vid, src, poster])
 
   return (
-    <div className="relative w-full overflow-hidden rounded-[14px] bg-black pt-[56.25%]">
+    <div
+      data-testid="video-player"
+      className="relative w-full overflow-hidden rounded-[14px] bg-black pt-[56.25%]"
+    >
       <div ref={containerRef} className="absolute inset-0 h-full w-full" id="wplayer" />
     </div>
   )

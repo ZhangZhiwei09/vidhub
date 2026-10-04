@@ -22,3 +22,43 @@ jobs:
       - run: pnpm test
       - run: pnpm lint
         continue-on-error: true
+
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: vidhub
+          POSTGRES_PASSWORD: vidhub
+          POSTGRES_DB: vidhub
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U vidhub -d vidhub"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://vidhub:vidhub@127.0.0.1:5432/vidhub
+      AUTH_SECRET: ci-secret-change-me-in-production-32c
+      AUTH_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_REALTIME_URL: http://127.0.0.1:5000
+      NEXT_PUBLIC_MEDIA_HTTP_URL: http://127.0.0.1:8000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:migrate
+      - run: pnpm db:seed-demo
+      - run: pnpm --filter @vidhub/web exec playwright install --with-deps chromium
+      - run: pnpm --filter @vidhub/web test:e2e
+        env:
+          CI: true

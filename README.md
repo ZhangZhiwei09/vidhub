@@ -12,14 +12,27 @@ pnpm install
 docker compose up -d postgres
 pnpm db:migrate
 pnpm db:seed-admin
-pnpm dev
+pnpm db:seed-demo
+pnpm --filter @vidhub/web dev
+pnpm --filter @vidhub/realtime dev
 ```
 
-可选旁路服务：
+直播推流另开：
 
 ```sh
-pnpm --filter @vidhub/realtime dev
 pnpm --filter @vidhub/media dev
+```
+
+一键全栈（含 web / postgres / realtime / media）：
+
+```sh
+docker compose up --build
+```
+
+本地冒烟：
+
+```sh
+pnpm --filter @vidhub/web test:e2e
 ```
 
 ## 结构
@@ -29,3 +42,4 @@ pnpm --filter @vidhub/media dev
 - `apps/media` — node-media-server（RTMP / HTTP-FLV）
 - `packages/db` — Drizzle schema
 - `packages/shared` — 共享类型与 zod 校验
+- `packages/player` — 原版 DOM 播放器内核

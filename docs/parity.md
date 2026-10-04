@@ -8,7 +8,7 @@
 |-------------|--------|------|------|
 | home | `/` | done | 视频列表 |
 | login | `/login` | done | Auth.js |
-| detail | `/video/[id]` | done | 评论/赞藏/弹幕 |
+| detail | `/video/[id]` | done | `@vidhub/player` + 评论/赞藏/弹幕 |
 | popular | `/popular` | done | |
 | result (search) | `/search` | done | |
 | upload | `/upload` | done | 分片上传 |
