@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import '@vidhub/player/style'
 
 function colorToNumber(color: string | number | null | undefined) {
   if (typeof color === 'number' && Number.isFinite(color)) return color
