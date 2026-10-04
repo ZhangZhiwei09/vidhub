@@ -11,6 +11,7 @@
     "./style": "./style/index.css"
   },
   "scripts": {
+    "build": "node -e \"process.exit(0)\"",
     "build:css": "lessc style/index.less style/index.css",
     "typecheck": "tsc --noEmit",
     "lint": "echo \"no lint yet\"",

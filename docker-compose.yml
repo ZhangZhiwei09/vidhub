@@ -61,6 +61,7 @@ services:
       NEXT_PUBLIC_MEDIA_HTTP_URL: http://localhost:8000
       NEXT_PUBLIC_RTMP_URL: rtmp://localhost:1935/live
       UPLOAD_DIR: /app/apps/web/public/uploads
+      SEED_DEMO: "1"
     ports:
       - "3000:3000"
     volumes:

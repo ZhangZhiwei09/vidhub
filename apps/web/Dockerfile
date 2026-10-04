@@ -5,10 +5,11 @@ RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 FROM base AS deps
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
 COPY apps/web/package.json apps/web/
-COPY packages/db/package.json packages/db/
-COPY packages/shared/package.json packages/shared/
 COPY apps/realtime/package.json apps/realtime/
 COPY apps/media/package.json apps/media/
+COPY packages/db/package.json packages/db/
+COPY packages/shared/package.json packages/shared/
+COPY packages/player/package.json packages/player/
 RUN pnpm install --frozen-lockfile
 
 FROM base AS builder
@@ -23,6 +24,7 @@ FROM base AS runner
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=builder /app ./
+RUN sed -i 's/\r$//' /app/apps/web/docker-entrypoint.sh && chmod +x /app/apps/web/docker-entrypoint.sh
 WORKDIR /app/apps/web
 EXPOSE 3000
-CMD ["pnpm", "start"]
+CMD ["/app/apps/web/docker-entrypoint.sh"]
