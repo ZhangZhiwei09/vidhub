@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@vidhub/db": "workspace:*",
+    "@vidhub/media-runtime": "workspace:*",
     "@vidhub/player": "workspace:*",
     "@vidhub/shared": "workspace:*",
     "bcryptjs": "^3.0.2",

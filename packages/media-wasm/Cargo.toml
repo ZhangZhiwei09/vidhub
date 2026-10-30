@@ -1,0 +1,12 @@
+[package]
+name = "vidhub-media-wasm"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+sha2 = "0.10"
+wasm-bindgen = "0.2"

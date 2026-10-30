@@ -8,6 +8,8 @@ COPY apps/web/package.json apps/web/
 COPY apps/realtime/package.json apps/realtime/
 COPY apps/media/package.json apps/media/
 COPY packages/db/package.json packages/db/
+COPY packages/media-runtime/package.json packages/media-runtime/
+COPY packages/media-wasm/package.json packages/media-wasm/
 COPY packages/shared/package.json packages/shared/
 COPY packages/player/package.json packages/player/
 RUN pnpm install --frozen-lockfile

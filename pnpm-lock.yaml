@@ -45,6 +45,9 @@ importers:
       '@vidhub/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@vidhub/media-runtime':
+        specifier: workspace:*
+        version: link:../../packages/media-runtime
       '@vidhub/player':
         specifier: workspace:*
         version: link:../../packages/player
@@ -140,6 +143,21 @@ importers:
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
+
+  packages/media-runtime:
+    dependencies:
+      '@vidhub/media-wasm':
+        specifier: workspace:*
+        version: link:../media-wasm
+      mp4box:
+        specifier: ^0.5.4
+        version: 0.5.4
+    devDependencies:
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+
+  packages/media-wasm: {}
 
   packages/player:
     dependencies:
