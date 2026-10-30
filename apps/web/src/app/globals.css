@@ -132,6 +132,218 @@ body.is-admin .vh-input::placeholder {
   color: var(--vh-admin-tertiary);
 }
 
+.vh-auth-page {
+  min-height: 100vh;
+  overflow: hidden;
+  background: #050505;
+}
+
+.vh-auth-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  position: relative;
+  isolation: isolate;
+}
+
+.vh-auth-shell::before,
+.vh-auth-shell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.vh-auth-shell::before {
+  z-index: -2;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.16), #050505 78%),
+    radial-gradient(circle at 24% 48%, rgba(0, 113, 227, 0.24), transparent 34%),
+    linear-gradient(135deg, #101215, #030303 72%);
+  transition: filter 900ms ease, transform 900ms ease;
+}
+
+.vh-auth-shell::after {
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12), #050505);
+}
+
+.vh-auth-shell.is-register::before {
+  filter: hue-rotate(22deg) saturate(0.85);
+  transform: scale(1.04);
+}
+
+.vh-auth-brand {
+  position: absolute;
+  top: 42px;
+  left: 54px;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+}
+
+.vh-auth-brand span {
+  color: #68b4ff;
+}
+
+.vh-auth-intro {
+  align-self: end;
+  padding: 0 0 92px 9vw;
+  max-width: 650px;
+}
+
+.vh-auth-eyebrow {
+  color: #9a9a9f;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.vh-auth-intro h1 {
+  display: none;
+  max-width: 600px;
+  margin: 20px 0;
+  font-size: clamp(48px, 6.2vw, 92px);
+  line-height: 0.96;
+  letter-spacing: -0.07em;
+}
+
+.vh-auth-intro h1.is-visible {
+  display: block;
+  animation: vh-auth-fade 550ms both;
+}
+
+.vh-auth-copy {
+  max-width: 400px;
+  color: #b7b7bc;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.vh-auth-panel {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 56px 9vw 56px 8vw;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.vh-auth-form {
+  display: none;
+  width: min(390px, 100%);
+  animation: vh-auth-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.vh-auth-form.is-active {
+  display: block;
+}
+
+.vh-auth-form h2 {
+  margin: 0 0 10px;
+  font-size: 32px;
+  letter-spacing: -0.05em;
+}
+
+.vh-auth-subtitle {
+  margin: 0 0 38px;
+  color: #96969c;
+}
+
+.vh-auth-field {
+  display: block;
+  margin: 24px 0;
+  border-bottom: 1px solid #45454a;
+  color: #888;
+  font-size: 12px;
+}
+
+.vh-auth-field input {
+  display: block;
+  width: 100%;
+  padding: 11px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 17px;
+}
+
+.vh-auth-primary {
+  width: 100%;
+  margin: 16px 0 22px;
+  padding: 15px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--vh-accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.vh-auth-primary:hover {
+  background: var(--vh-accent-hover);
+  transform: translateY(-1px);
+}
+
+.vh-auth-switch,
+.vh-auth-legal {
+  text-align: center;
+  font-size: 13px;
+}
+
+.vh-auth-switch {
+  color: #999;
+}
+
+.vh-auth-switch button,
+.vh-auth-back {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #68b4ff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.vh-auth-back {
+  margin-bottom: 48px;
+  font-size: 13px;
+}
+
+.vh-auth-legal {
+  margin-top: 28px;
+  color: #6d6d73;
+  line-height: 1.5;
+  font-size: 11px;
+}
+
+.vh-auth-error {
+  margin: 0 0 14px;
+  color: #ff6b6b;
+  font-size: 13px;
+}
+
+@keyframes vh-auth-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes vh-auth-fade {
+  from { opacity: 0; transform: translateX(-18px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 760px) {
+  .vh-auth-shell { display: block; }
+  .vh-auth-intro { min-height: 42vh; padding: 120px 28px 36px; }
+  .vh-auth-intro h1 { font-size: 56px; }
+  .vh-auth-copy { font-size: 15px; }
+  .vh-auth-panel { min-height: 58vh; padding: 36px 28px 48px; border-left: 0; border-top: 1px solid rgba(255,255,255,.12); }
+  .vh-auth-brand { top: 28px; left: 28px; }
+}
+
 /* Motion */
 @keyframes vh-fade-up {
   from {

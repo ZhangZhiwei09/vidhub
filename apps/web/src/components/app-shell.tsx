@@ -41,8 +41,9 @@ export function AppShell({
   }, [onAdmin])
 
   const isHome = pathname === '/'
+  const isLogin = pathname === '/login'
 
-  if (onAdmin) {
+  if (onAdmin || isLogin) {
     return <>{children}</>
   }
 
